@@ -107,6 +107,10 @@ header{gap:2px;padding:3px 6px}
 .bank{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}.wchip{padding:10px 16px;border-radius:16px;border:1px solid var(--st);background:var(--gl2);color:var(--tx);font-size:17px;box-shadow:var(--hi)}
 .cz .cl{margin-bottom:16px}.cz .cl p{margin:0;line-height:2.2;font-size:20px}.cz .cl p.ar{font-size:28px;line-height:2.4}.cz .cl small{display:block;direction:ltr;text-align:left;margin-top:2px;line-height:1.35;font-size:14px}
 .wchip.ar{font-size:24px}[data-dg]{touch-action:none;-webkit-user-select:none;user-select:none}.ghost{position:fixed;z-index:99;pointer-events:none;transform:translate(-50%,-50%) scale(1.08);box-shadow:0 10px 28px rgba(0,0,0,.45);margin:0}.lift{opacity:.3}.blank.over{border-color:var(--ac);background:var(--gl2)}
+.lgd{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:13px;color:var(--mu)}.lgd i{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--kc);margin-right:5px}
+.ph{color:var(--mu);font-size:.55em;opacity:.85}.blank{border-color:var(--kc,var(--bd))}.wchip{border-color:var(--kc,var(--st));border-bottom-width:3px}.lb{margin:0 6px;background:none;border:0;font-size:20px;vertical-align:middle}
+.bsh-bg{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:60}.bsh{position:fixed;left:0;right:0;bottom:0;z-index:61;background:var(--bg);border-radius:24px 24px 0 0;padding:20px 18px calc(env(safe-area-inset-bottom,0px) + 22px);box-shadow:0 -10px 40px rgba(0,0,0,.45);display:flex;flex-direction:column;gap:10px;max-height:80vh;overflow:auto}.bsh p{margin:0}.bsh>b{font-size:20px}
+.bsh mark{background:color-mix(in srgb,var(--kc) 28%,transparent);color:inherit;border-radius:6px;padding:0 4px;border-bottom:2px solid var(--kc)}.tks{display:flex;flex-wrap:wrap;gap:8px}.tk{display:flex;flex-direction:column;align-items:center;padding:6px 10px;border-radius:12px;border-bottom:3px solid var(--kc);background:var(--gl)}.tk small{font-size:11px;color:var(--mu)}
 </style>
 </head>
 <body>
@@ -379,7 +383,7 @@ const FC=/яблок|груш|банан|апельсин|лимон|помид�
 const NL=/^(посол|сокол|ствол|козёл|осёл|канал|вокзал|журнал|портал|материал|капитал|идеал|финал|футбол)$/;
 const pos=w=>{const r=w.tr.split(/[,;\/]/)[0].replace(/\(.*?\)/g,"").trim().toLowerCase();
   if(/(ал|ил|ел|ёл|ол|ул|ыл|ял)$/.test(r)&&r.length>4&&!r.includes(" ")&&!NL.test(r))return["vp",r];
-  if(r.length<4||r.split(" ").length>2)return["x",r];if(/(ть|ться|ти|чь)$/.test(r))return["v",r];if(/(ый|ий|ой|ая|яя|ое|ее)$/.test(r)&&r.length>5)return["a",r];
+  if(r.length<4||r.split(" ").length>2)return["x",r];if(/(ать|ять|еть|ить|оть|уть|ыть|ться|ти|мочь|лечь|течь)$/.test(r)&&!/^(мать|пять|девять|десять|сеть|плеть)$/.test(r))return["v",r];if(/(ый|ий|ой|ая|яя|ое|ее)$/.test(r)&&r.length>5)return["a",r];
   return[FC.test(r)?"fc":FM.test(r)?"fm":PP.test(r)?"p":PL.test(r)?"l":TM.test(r)?"t":"n",r]};
 const MP=/^(мессия|юноша|мужчина|дядя|папа|дедушка|слуга|судья|старейшина|коллега|сирота)$/,rg=r=>MP.test(r)?"m":/[ыи]$/.test(r)?"p":/[ая]$/.test(r)?"f":/[ое]$/.test(r)?"n":/(сть|знь|чь|шь|жь|щь|вь|ть|рь)$/.test(r)?"f":"m";
 const RA={big:{m:"большой",f:"большая",n:"большое",p:"большие"},nice:{m:"красивый",f:"красивая",n:"красивое",p:"красивые"},imp:{m:"важен",f:"важна",n:"важно",p:"важны"}};
@@ -517,9 +521,51 @@ const sheet=w=>`<div class="sheet"><div class="bk" data-a="shut"></div><div clas
 let BRD={rows:null,busy:0,err:"",me:"",l:"all"},REP={l:"all"};
 let SBN={cid:"all",busy:0,items:null,bank:[],fill:{},sel:null,chk:0,err:"",tk:0};
 const rb=()=>{if(V.v=="home"&&S.tab=="box")R()};
+/*HELP*/
+const KL={v:["глагол","#6d7bff"],n:["существительное","#2fbf80"],a:["прилагательное","#f5a524"],p:["предлог","#f06fb2"],r:["артикль","#22b8cf"],o:["служебное слово","#a78bfa"]},
+PH={v:"глагол",n:"сущ.",a:"прил.",p:"предлог",r:"артикль",o:"слово"},
+KH={v:"слово действия, отвечает на «что делать?»",n:"название предмета, человека или места: «кто? что?»",a:"слово, которое описывает: «какой?»",p:"маленькое слово связи, например: в, на, из, с",r:"маленькое слово перед существительным: a, an, the",o:"служебное слово: местоимение, союз или частица"},
+ENR=new Set(["a","an","the"]),ENP=new Set("in on at to from with of for about by into over under after before between through".split(" ")),
+ENO=new Set("i you he she it we they me him her us them my your his our their this that these those and or but not no if so".split(" ")),
+ARP=new Set(["في","من","علي","الي","عن","مع","ب","ل"]),ARO=new Set(["هو","هي","انا","انت","هذا","هذه","ذلك","الذي","ما","لا","ثم","او","لكن","كل","ان"]);
+const kindOf=(w,rl)=>{const t=nk(w.t).toLowerCase().replace(/^to\s+/,"");
+  if(rl=="английский"){if(ENR.has(t))return"r";if(ENP.has(t))return"p";if(ENO.has(t))return"o"}
+  else if(rl=="арабский"){if(ARP.has(t))return"p";if(ARO.has(t))return"o"}
+  const p=pos(w)[0];return p=="v"||p=="vp"?"v":p=="a"?"a":p=="x"?(t.length<=3?"o":"n"):"n"};
+const ctxRule=it=>{const p=it.pre.toLowerCase().trim();
+  if(/\bto$/.test(p)&&it.k=="v")return"После «to» всегда идёт глагол в начальной форме: want to go, need to see.";
+  if(/\b(a|an)$/.test(p))return"После a/an стоит существительное (можно с прилагательным): a book, an old book.";
+  if(/\bthe$/.test(p))return"После «the» идёт существительное: конкретный, уже известный предмет.";
+  if(/\b(very|so|too)$/.test(p))return"Слова very/so/too стоят перед прилагательным: very big.";
+  if(/\b(can|could|will|would|should|must)$/.test(p))return"После can/will/should глагол идёт без «to».";
+  if(/\b(my|your|his|her|our|their)$/.test(p))return"Слово my/your/his стоит перед существительным: my friend.";
+  if(/\b(is|am|are|was|were)$/.test(p))return"После is/am/are идёт прилагательное или существительное: He is tall.";
+  return""};
+const arNote=it=>{const pw=it.pre.trim().split(/\s+/).pop()||"",m=[...it.ans].reverse().find(c=>/[\u064B-\u0650]/.test(c));
+  if(ARP.has(nk(pw)))return`После предлога «${pw}» слово стоит в родительном падеже: окончание -ِ или -ٍ.`;
+  if(strip(it.ans).startsWith("ال")&&it.k=="n")return"«ال» делает слово определённым: вместо танвина (ـٌ ـً ـٍ) остаётся короткий гласный (ـُ ـَ ـِ).";
+  if(m=="\u064F"||m=="\u064C")return"Окончание -ُ / -ٌ: именительный падеж. Так выглядит подлежащее или сказуемое.";
+  if(m=="\u064E"||m=="\u064B")return it.k=="v"?"Окончание -َ: глагол в прошедшем времени, 3-е лицо, муж. род.":"Окончание -َ / -ً: винительный падеж. Так выглядит то, на что направлено действие.";
+  if(m=="\u0650"||m=="\u064D")return"Окончание -ِ / -ٍ: родительный падеж. Он нужен после предлога или во втором слове сочетания.";
+  return""};
+function fbMsg(it,g,rl){const e=it.k,h=g.k,ea=it.ans.toLowerCase(),ga=g.ans.toLowerCase();
+  if(rl=="английский"&&/^(a|an)$/.test(ea)&&/^(a|an)$/.test(ga)){const nx=(it.post.match(/[A-Za-z]+/)||[""])[0];return{h:"Почти! Артикль a или an",p:(nx?`Слово «${esc(nx)}» начинается с ${ea=="an"?"гласного":"согласного"} звука, поэтому нужен «${ea}». `:"")+"Перед гласным звуком ставим an (an apple), перед согласным — a (a book)."}}
+  if(e!=h)return{h:`Здесь нужен ${KL[e][0]}`,p:`«${esc(g.ans)}» — это ${KL[h][0]}, а на этом месте нужно ${KH[e]}. ${h=="r"?"Артикль не заменяет слово: он стоит перед существительным.":"Попробуйте другое слово."}`};
+  return{h:"Тип слова верный, смысл другой",p:`«${esc(g.ans)}» тоже ${KL[h][0]}, но по смыслу не подходит. Сверьтесь с переводом: «${esc(it.t)}».`}}
+function sheetHtml(v,rl){const sh=v.sh;if(!sh)return"";const j=sh.t=="err"?sh.l[sh.n]:sh.j,it=v.items[j],ar=rl=="арабский",cr=rl=="английский"?ctxRule(it):"",an=ar?arNote(it):"",c=KL[it.k][1];let b;
+  if(sh.t=="err"){const m=fbMsg(it,v.items[v.fill[j]],rl);b=`<b>${m.h}</b><p>${m.p}</p>${cr?`<p class="mu">💡 ${esc(cr)}</p>`:""}${an?`<p class="mu">💡 ${esc(an)}</p>`:""}<div class="row">${sh.l.length>1?`<button class="btn sec" data-a="bsn">Следующая (${sh.n+1}/${sh.l.length})</button>`:""}<button class="btn" data-a="bsx">Понятно</button></div>`}
+  else{const ai=sh.ai;b=`<b>💡 Разбор</b><p dir="${ar?"rtl":"auto"}" style="font-size:${ar?26:20}px;line-height:1.9">${esc(it.pre)}<mark style="--kc:${c}">${esc(it.ans)}</mark>${esc(it.post)}</p><p class="mu" dir="ltr">${esc(it.t)}</p><p class="lgd"><span><i style="--kc:${c}"></i>${KL[it.k][0]}: ${KH[it.k]}</span></p>`
+    +(cr?`<p>💡 ${esc(cr)}</p>`:"")+(an?`<p>💡 ${esc(an)}</p>`:"")
+    +(ai&&ai.skel?`<div class="tks" dir="${ar?"rtl":"ltr"}">${ai.skel.map(x=>`<span class="tk" style="--kc:${(KL[x.k]||KL.o)[1]}"><b>${esc(x.w)}</b><small>${esc(x.r)}</small></span>`).join("")}</div>${ai.rule?`<p>${esc(ai.rule)}</p>`:""}${ai.end?`<p class="mu">💡 ${esc(ai.end)}</p>`:""}`:aiOn()?`<button class="btn sec" data-a="bai" ${sh.busy?"disabled":""}>${sh.busy?"Разбираю…":"Разобрать подробнее (ИИ)"}</button>`:"")
+    +`<button class="btn" data-a="bsx">Закрыть</button>`}
+  return`<div class="bsh-bg" data-a="bsx"></div><div class="bsh">${b}</div>`}
+async function boxAI(){const v=SBN,sh=v.sh;if(!sh||sh.busy)return;const it=v.items[sh.j],L=S.rl||"английский",sm=await getSm();if(!sm)return toast("Добавьте ключ Gemini в настройках");sh.busy=1;R();
+  try{const tx=(await sm(`Разбери предложение для новичка (язык: ${L}): «${it.pre+it.ans+it.post}». Верни ТОЛЬКО JSON: {"skel":[{"w":"слово из предложения","r":"роль по-русски: подлежащее, сказуемое, дополнение, обстоятельство, определение, предлог или артикль","k":"v|n|a|p|r|o"}],"rule":"1–2 коротких дружелюбных предложения о конструкции, без сложных терминов"${L=="арабский"?',"end":"коротко: как и почему меняются окончания слов (падежи, огласовка)"':""}}`,{modelTier:"quick"})).text;sh.ai=JSON.parse(tx.slice(tx.indexOf("{"),tx.lastIndexOf("}")+1))}catch(e){toast(AIE||"Не удалось получить разбор")}
+  sh.busy=0;R()}
+/*END*/
 /* перетаскивание слов в пропуски (палец/мышь); короткое касание работает как раньше */
 let DG=null,SUPC=0;
-const bdrop=(from,i,j)=>{const v=SBN,it=from=="b"?i:v.fill[i];if(it==null||(from=="f"&&i===j))return;const old=v.fill[j];if(from=="f")delete v.fill[i];v.fill[j]=it;if(from=="f"&&old!=null)v.fill[i]=old;v.sel=null;v.chk=0};
+const bdrop=(from,i,j)=>{const v=SBN,it=from=="b"?i:v.fill[i];if(it==null||(from=="f"&&i===j))return;const old=v.fill[j];if(from=="f")delete v.fill[i];v.fill[j]=it;if(from=="f"&&old!=null)v.fill[i]=old;v.sel=null;v.chk=0;v.sh=null};
 document.addEventListener("pointerdown",e=>{const el=e.target.closest&&e.target.closest("[data-dg]");if(el&&V.v=="home")DG={el,from:el.dataset.dg,i:+el.dataset.i,x:e.clientX,y:e.clientY,on:0}});
 document.addEventListener("pointermove",e=>{if(!DG)return;if(!DG.on){if(Math.hypot(e.clientX-DG.x,e.clientY-DG.y)<8)return;DG.on=1;const g=DG.el.cloneNode(true);g.removeAttribute("data-a");g.removeAttribute("data-dg");g.classList.add("ghost");document.body.appendChild(g);DG.g=g;DG.el.classList.add("lift")}
   DG.g.style.left=e.clientX+"px";DG.g.style.top=e.clientY+"px";document.querySelectorAll(".blank.over").forEach(b=>b.classList.remove("over"));const t=document.elementFromPoint(e.clientX,e.clientY),b=t&&t.closest(".blank");if(b)b.classList.add("over");e.preventDefault()},{passive:false});
@@ -529,14 +575,14 @@ document.addEventListener("pointerup",dgEnd);document.addEventListener("pointerc
 document.addEventListener("click",e=>{if(SUPC){e.stopPropagation();e.preventDefault();SUPC=0}},true);
 async function vocalize(ws){if(S.hk===false)return;const need=[];ws.forEach(w=>(w.ex||[]).forEach(e=>{if(!e.v&&!e.m&&!/[\u064B-\u0652]/.test(e.s))need.push(e)}));if(!need.length)return;const sm=await getSm();if(!sm)return;
   try{const a=jp((await sm("Добавь полную огласовку (харакāты) к каждому арабскому предложению, не меняя слов и их порядка. Верни ТОЛЬКО JSON-массив строк той же длины: "+JSON.stringify(need.map(e=>e.s)),{modelTier:"quick"})).text);need.forEach((e,i)=>{if(typeof a[i]=="string"&&strip(a[i])==strip(e.s)){e.s=a[i];e.v=1}});save()}catch(e){}}
-async function boxBuild(){const v=SBN,tk=++v.tk,rl=S.rl||"английский";v.busy=1;v.err="";v.items=null;v.fill={};v.sel=null;v.chk=0;rb();
+async function boxBuild(){const v=SBN,tk=++v.tk,rl=S.rl||"английский";v.busy=1;v.err="";v.items=null;v.fill={};v.sel=null;v.chk=0;v.sh=null;rb();
   let W=S.words.filter(w=>wl(w)==rl&&(v.cid=="all"||w.c==v.cid));const L=W.filter(w=>w.st>0);W=shuf(L.length>=4?L:W).slice(0,8);
   if(!W.length){v.busy=0;v.err="Нет слов на этом языке. Создайте курс.";return rb()}
   try{await ldBatch(W,1);if(rl=="арабский")await vocalize(W)}catch(e){}
   let items=[];
   for(const w of W){const q=strip(w.t).toLowerCase().replace(/^to\s+/,"");
     for(const e of shuf((w.ex||[]).slice()).sort((a,b)=>!!a.m-!!b.m)){const m=[...e.s.matchAll(/[\p{L}\p{M}'’-]+/gu)].find(x=>{const k=strip(x[0]).toLowerCase();return k==q||k=="ال"+q||lemmaTry(k).includes(q)});
-      if(m){items.push({pre:e.s.slice(0,m.index),ans:m[0],post:e.s.slice(m.index+m[0].length),t:e.t,m:e.m});break}}
+      if(m){items.push({pre:e.s.slice(0,m.index),ans:m[0],post:e.s.slice(m.index+m[0].length),t:e.t,m:e.m,k:kindOf(w,rl)});break}}
     if(items.length>=6)break}
   const good=items.filter(i=>!i.m);if(good.length>=3)items=good;
   if(tk!=v.tk)return;v.busy=0;
@@ -594,8 +640,8 @@ homeR:()=>`<h2>Чтение</h2>${aiBn()}<p class="mu">Короткие текс
 homeB:()=>{const v=SBN,rl=S.rl||"английский",cs=S.courses.filter(c=>cl(c)==rl),rtl=rl=="арабский",dv=t=>rtl&&S.hk===false?strip(t):t;if(!v.items&&!v.busy&&!v.err)setTimeout(boxBuild);
   const top=`<h2>Песочница</h2>${langs()}`+(cs.length?`<div class="lgs">${[["all","Все курсы"],...cs.map(c=>[c.id,c.title])].map(([k,n])=>`<button class="chip ${k==v.cid?"on":""}" data-a="bcid" data-k="${k}">${esc(n)}</button>`).join("")}</div>`:"");
   if(v.busy||!v.items)return top+(v.err?`<div class="empty"><p>${esc(v.err)}</p></div><button class="btn" data-a="bnew">Повторить</button>`:`<div class="card g col"><i class="sk"></i><i class="sk" style="width:80%"></i><i class="sk" style="width:60%"></i></div><p class="mu">Подбираю предложения…</p>`);
-  const used=new Set(Object.values(v.fill)),ok=j=>v.chk&&v.fill[j]!=null&&nz(v.items[v.fill[j]].ans)==nz(v.items[j].ans),done=v.items.every((_,j)=>v.fill[j]!=null),good=v.chk&&v.items.every((_,j)=>ok(j));
-  return top+`<p class="mu">Перетащите слово в пропуск или просто нажмите на него. Заполненный пропуск можно перетащить дальше или нажать, чтобы вернуть слово.</p><div class="card g col cz">`+v.items.map((it,j)=>`<div class="cl"><p dir="${rtl?"rtl":"auto"}" class="${rtl?"ar":""}">${esc(dv(it.pre))}<button class="blank ${v.sel===j?"sel":""} ${v.chk&&v.fill[j]!=null?(ok(j)?"ok":"bad"):""}" data-a="bblank" data-i="${j}" ${v.fill[j]!=null?'data-dg="f"':""}>${v.fill[j]!=null?esc(dv(v.items[v.fill[j]].ans)):"&nbsp;"}</button>${esc(dv(it.post))}</p><small dir="ltr">${esc(it.t)}</small></div>`).join("")+`</div><div class="bank">${v.bank.filter(i=>!used.has(i)).map(i=>`<button class="wchip ${rtl?"ar":""}" data-a="bpick" data-i="${i}" data-dg="b">${esc(dv(v.items[i].ans))}</button>`).join("")}</div>`+(good?`<div class="fb ok"><span class="fi">${ic("check",16)}</span><span>Отлично! Всё верно.</span></div>`:v.chk?`<p class="mu">Исправьте красные пропуски.</p>`:"")+`<div class="row"><button class="btn sec" data-a="bre">Заново</button><button class="btn" data-a="${good?"bnew":"bchk"}" ${done?"":"disabled"}>${good?"Новый текст":"Проверить"}</button></div>`},
+  const used=new Set(Object.values(v.fill)),ok=j=>v.chk&&v.fill[j]!=null&&nz(v.items[v.fill[j]].ans)==nz(v.items[j].ans),done=v.items.every((_,j)=>v.fill[j]!=null),good=v.chk&&v.items.every((_,j)=>ok(j)),kinds=[...new Set(v.items.map(i=>i.k))];
+  return top+`<p class="mu">Перетащите слово в пропуск или нажмите на него. Цвет подсказывает, какая часть речи нужна.</p><div class="lgd">${kinds.map(k=>`<span><i style="--kc:${KL[k][1]}"></i>${KL[k][0]}</span>`).join("")}</div><div class="card g col cz">`+v.items.map((it,j)=>`<div class="cl"><p dir="${rtl?"rtl":"auto"}" class="${rtl?"ar":""}">${esc(dv(it.pre))}<button class="blank ${v.sel===j?"sel":""} ${v.chk&&v.fill[j]!=null?(ok(j)?"ok":"bad"):""}" style="--kc:${KL[it.k][1]}" data-a="bblank" data-i="${j}" ${v.fill[j]!=null?'data-dg="f"':""}>${v.fill[j]!=null?esc(dv(v.items[v.fill[j]].ans)):`<span class="ph">[${PH[it.k]}]</span>`}</button>${esc(dv(it.post))}${ok(j)?`<button class="lb" data-a="bwin" data-i="${j}" aria-label="Разбор">💡</button>`:""}</p><small dir="ltr">${esc(it.t)}</small></div>`).join("")+`</div><div class="bank">${v.bank.filter(i=>!used.has(i)).map(i=>`<button class="wchip ${rtl?"ar":""}" style="--kc:${KL[v.items[i].k][1]}" data-a="bpick" data-i="${i}" data-dg="b">${esc(dv(v.items[i].ans))}</button>`).join("")}</div>`+(good?`<div class="fb ok"><span class="fi">${ic("check",16)}</span><span>Отлично! Всё верно. Нажмите 💡, чтобы увидеть разбор.</span></div>`:v.chk?`<p class="mu">Нажмите «Проверить» ещё раз после исправления.</p>`:"")+`<div class="row"><button class="btn sec" data-a="bre">Заново</button><button class="btn" data-a="${good?"bnew":"bchk"}" ${done?"":"disabled"}>${good?"Новый текст":"Проверить"}</button></div>`+sheetHtml(v,rl)},
 homeA:()=>`<h2>Диалог с ИИ</h2>${aiBn()}<p class="mu">Практикуйте разговор с выученными словами. Слов для практики: ${kwList().length}.</p>${cfg()}<b>Выберите сценарий</b><div class="tg">${SC.map((n,i)=>tile(n,i+1,`data-a="chat" data-k="${n}"`)).join("")}</div>`,
 import:()=>`<h2>Новый курс</h2><label class="drop">${ic("file",36)}Выберите или перетащите файл<small>.csv .tsv .txt .xlsx .docx · слова без перевода переведёт MyMemory / ИИ</small><input type="file" hidden accept=".csv,.tsv,.txt,.xlsx,.xls,.docx"></label><textarea class="in" id="paste" rows="7" placeholder="…или вставьте список:&#10;apple — яблоко&#10;to run — бежать"></textarea><div class="row"><button class="btn sec" data-a="sample">Пример</button><button class="btn" data-a="parse">Разобрать</button></div>`,
 preview:()=>{const m=V.pairs.filter(p=>!p[1].trim()).length;return`<h2>Предпросмотр</h2><input class="in" data-f="title" value="${esc(V.title)}" placeholder="Название курса"><small class="mu">Язык слов курса</small><div class="lgs">${LANGS.map(l=>`<button class="chip ${l==V.clang?"on":""}" data-a="clang" data-k="${l}">${cap(l)}</button>`).join("")}</div><div class="row"><select class="in" data-f="per">${[5,10,15,20].map(n=>`<option value="${n}" ${n==V.per?"selected":""}>${n} слов в уроке</option>`).join("")}</select><button class="btn sec" data-a="swap">${ic("swap",20)} Поменять</button></div><input class="in" data-f="lang" value="${esc(V.lang)}" placeholder="Язык перевода"><p class="mu">Найдено: ${V.pairs.length}${V.bad.length?` · пропущено: ${V.bad.length}`:""}${m?` · без перевода: ${m}`:""}</p>${m?`<button class="btn sec" data-a="tr" ${V.busy?"disabled":""}>${ic("lang",20)} ${V.busy?"Перевожу…":"Перевести автоматически"}</button>`:""}${V.pairs.slice(0,50).map((p,i)=>`<div class="pr"><input class="in" data-f="a" data-i="${i}" value="${esc(p[0])}"><input class="in" data-f="b" data-i="${i}" value="${esc(p[1])}" placeholder="нет перевода"><button class="x" data-a="del" data-i="${i}" aria-label="Удалить">${ic("close",18)}</button></div>`).join("")}${V.pairs.length>50?`<p class="mu">…и ещё ${V.pairs.length-50} слов (редактируются после создания курса)</p>`:""}${V.bad.length?`<details><summary>Не распознано (${V.bad.length})</summary>${V.bad.slice(0,50).map(b=>`<p class="mu">Строка ${b[0]}: ${esc(b[1])} — ${b[2]}</p>`).join("")}</details>`:""}<button class="btn" data-a="make" ${V.pairs.length&&!V.busy?"":"disabled"}>Создать курс</button>`},
@@ -738,8 +784,12 @@ function act(a,d,el){
   case"bdref":loadBoard();return;
   case"bcid":SBN.cid=d.k;return boxBuild();
   case"bnew":return boxBuild();
-  case"bre":SBN.fill={};SBN.sel=null;SBN.chk=0;break;
-  case"bchk":SBN.chk=1;break;
+  case"bre":SBN.fill={};SBN.sel=null;SBN.chk=0;SBN.sh=null;break;
+  case"bchk":{const v=SBN,bad=v.items.map((_,j)=>j).filter(j=>nz(v.items[v.fill[j]].ans)!=nz(v.items[j].ans));v.chk=1;v.sh=bad.length?{t:"err",l:bad,n:0}:null;break}
+  case"bwin":SBN.sh={t:"win",j:+d.i};break;
+  case"bsx":SBN.sh=null;break;
+  case"bsn":SBN.sh.n=(SBN.sh.n+1)%SBN.sh.l.length;break;
+  case"bai":return boxAI();
   case"bpick":{const v=SBN,n=v.items.findIndex((_,j)=>v.fill[j]==null),j=v.sel!=null&&v.fill[v.sel]==null?v.sel:n;if(j<0)return;v.fill[j]=+d.i;v.sel=null;v.chk=0;break}
   case"bblank":{const v=SBN,j=+d.i;if(v.fill[j]!=null)delete v.fill[j];else v.sel=j;v.chk=0;break}
   case"syn":V={v:"sync"};break;
