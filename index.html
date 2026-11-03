@@ -112,6 +112,7 @@ header{gap:2px;padding:3px 6px}
 .bsh-bg{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:60}.bsh{position:fixed;left:0;right:0;bottom:0;z-index:61;background:var(--bg);border-radius:24px 24px 0 0;padding:20px 18px calc(env(safe-area-inset-bottom,0px) + 22px);box-shadow:0 -10px 40px rgba(0,0,0,.45);display:flex;flex-direction:column;gap:10px;max-height:80vh;overflow:auto}.bsh p{margin:0}.bsh>b{font-size:20px}
 .bsh mark{background:color-mix(in srgb,var(--kc) 28%,transparent);color:inherit;border-radius:6px;padding:0 4px;border-bottom:2px solid var(--kc)}.tks{display:flex;flex-wrap:wrap;gap:8px}.tk{display:flex;flex-direction:column;align-items:center;padding:6px 10px;border-radius:12px;border-bottom:3px solid var(--kc);background:var(--gl)}.tk small{font-size:11px;color:var(--mu)}
 .pals{display:grid;grid-template-columns:1fr 1fr;gap:10px}.pal{display:flex;flex-direction:column;gap:8px;align-items:center;padding:10px;border-radius:18px;border:2px solid var(--bd);background:var(--gl);color:var(--tx);font:inherit}.pal.on{border-color:var(--ac)}.pal .sw{width:100%;height:28px;border-radius:14px}
+.trt{cursor:pointer;display:block;min-height:20px}.trh{display:inline-block;width:96px;height:12px;border-radius:6px;background:var(--bd);vertical-align:middle}
 </style>
 </head>
 <body>
@@ -170,7 +171,7 @@ const masteredCnt=l=>{const W=!l||l=="all"?S.words:S.words.filter(w=>wl(w)==l);r
 const kwObjs=(rl=S.rl||"английский")=>{const W=S.words.filter(w=>wl(w)==rl);let a=W.filter(w=>w.st>0&&w.st<8).sort((x,y)=>x.due-y.due).slice(0,8);if(!a.length)a=W.slice(0,8);return a};
 const kwList=()=>kwObjs().map(w=>w.t);
 const GOALS=[[5,"Спокойный","🦦"],[10,"Крепкий","💪"],[15,"Уверенный","🏎️"],[20,"Монстр","🦍"]];
-const goal=()=>S.goal||10,todayXp=()=>((S.hist||{})[dk()]||{}).xp||0,isOwn=c=>!c.from;
+const goal=()=>S.goal||10,todayWd=()=>{const h=(S.hist||{})[dk()]||{};return h.wd!=null?h.wd:(h.xp||0)},dayWd=n=>{S.hist=S.hist||{};const k=dk(),h=S.hist[k]||(S.hist[k]={xp:0,rv:0,l:{}});h.wd=(h.wd!=null?h.wd:(h.xp||0))+n},isOwn=c=>!c.from;
 const SQL=`create table if not exists wf_state(code text primary key,state jsonb not null);
 alter table wf_state enable row level security;
 create or replace function get_data(p_code text) returns jsonb language sql security definer set search_path=public as $$ select state from wf_state where code=p_code; $$;
@@ -350,32 +351,27 @@ function undo(){
   if(e.ok){T.ok--;if(!e.d)T.done.delete(w.id)}else{T.q.pop();if(!e.e)T.err.delete(w.id)}
   T.combo=e.c;T.i=e.i;V.ans=null;V.flip=false;save();
 }
-/* Звёздочки (⭐) начисляются только по итогам тренировки:
-   +1 ⭐ за каждое новое выученное слово (st == 0 -> 1)
-   +1 ⭐ за каждое успешно повторённое слово (st > 0) */
+/* Прогресс слова фиксируется по первому ответу (верно -> шаг вперёд, ошибка -> шаг назад).
+   Это делается при выходе из тренировки, сворачивании приложения и в конце урока, поэтому
+   выученные слова не теряются. ⭐ даётся один раз, когда слово впервые доходит до 5 этапа. */
+function commitRun(t){if(!t||!t.words)return;t.ap=t.ap||new Set();const now=Date.now();let ch=0;
+  if(!S.sf){S.words.forEach(w=>{if(w.st>=5&&!w.star)w.star=1});S.sf=1}
+  t.words.forEach(w=>{if(t.ap.has(w.id)||!(t.done.has(w.id)||t.err.has(w.id)))return;t.ap.add(w.id);ch=1;
+    if(t.err.has(w.id)){w.st=Math.max(1,w.st-1);w.due=now+DAY;return}
+    const b=todayWd();dayWd(1);if(b<goal()&&b+1>=goal())t.goalHit=1;
+    if(w.st==0){t.newW++;w.st=1;w.due=now+IV[1]*DAY}
+    else{t.repW++;if(w.due<=now||(t.key&&t.key.rev)){w.st=Math.min(7,w.st+1);w.due=now+IV[w.st]*DAY}}
+    if(w.st>=5&&!w.star){w.star=1;t.xp++;gain(1,wl(w))}});
+  if(ch){t.h=[];save()}}
 function finish(){
-  const g0=todayXp(),now=Date.now(),sc=T.words.length?1-T.err.size/T.words.length:1,pass=sc>=.8;
-  let newW=0,repW=0;
-  T.words.forEach(w=>{
-    const l=wl(w);
-    if(T.err.has(w.id)){
-      w.st=Math.max(1,w.st-1);w.due=now+DAY;
-    }else{
-      if(w.st==0){
-        newW++;w.st=1;w.due=now+IV[1]*DAY;gain(1,l);
-      }else{
-        repW++;
-        if(w.due<=now||(T.key&&T.key.rev)){w.st=Math.min(7,w.st+1);w.due=now+IV[w.st]*DAY}
-        gain(1,l);
-      }
-    }
-  });
-  T.newW=newW;T.repW=repW;T.xp=newW+repW;T.goalHit=g0<goal()&&todayXp()>=goal();
+  const now=Date.now(),sc=T.words.length?1-T.err.size/T.words.length:1,pass=sc>=.8;
+  T.words.forEach(w=>{if(!T.err.has(w.id))T.done.add(w.id)});commitRun(T);
   const td=new Date().toDateString(),y=new Date(now-DAY).toDateString();
   if(S.last!=td){S.streak=S.last==y?S.streak+1:1;S.last=td}
   if(T.key&&T.key.l!=null&&pass){const c=S.courses.find(x=>x.id==T.key.c);if(c&&!c.done.includes(T.key.l))c.done.push(T.key.l)}
   save();V={v:"done",sc:Math.round(sc*100),pass};
 }
+document.addEventListener("visibilitychange",()=>{if(document.hidden&&V.v=="run"&&T)commitRun(T)});addEventListener("pagehide",()=>{if(V.v=="run"&&T)commitRun(T)});
 const tok=(s,hl)=>String(s).split(/([\p{L}\p{M}'’-]+)/u).map((p,i)=>i%2?`<i class="wd${hl&&strip(p).toLowerCase()==strip(hl).toLowerCase()?" hl":""}" data-a="wt" data-x="${esc(p)}">${esc(p)}</i>`:esc(p)).join("");
 const speak=(t,lg)=>{try{const u=new SpeechSynthesisUtterance(t),g=lg||S.rl||"",o=!!lg||V.v=="read"||V.v=="chat";u.lang=/[\u0600-\u06FF]/.test(t)?"ar-SA":o?(/франц/i.test(g)?"fr-FR":/нем/i.test(g)?"de-DE":/испан/i.test(g)?"es-ES":/турец/i.test(g)?"tr-TR":"en-US"):"en-US";speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){}};
 const rbRun=()=>{if(V.v=="run")R()};
@@ -648,7 +644,7 @@ board:()=>{
 },
 rep:()=>{const l=REP.l,r=weekRep(l),mx=Math.max(1,...r.L.map(x=>x.xp)),DN=["Вс","Пн","Вт","Ср","Чт","Пт","Сб"];return`<h2>Недельный отчёт</h2>${lchips("rpl",l)}<div class="card tot"><div class="row" style="justify-content:space-around;text-align:center"><div><b class="big2">${r.xp}</b><small class="mu">⭐ за 7 дн.</small></div><div><b class="big2">${r.lrn}</b><small class="mu">выучено слов</small></div><div><b class="big2">${r.act}/7</b><small class="mu">активных дней</small></div></div></div><div class="card g col"><b>Звёздочки (⭐) по дням</b><div class="chart">${r.L.map(x=>`<span><small class="mu">${x.xp||""}</small><i class="cb" style="height:${x.xp?Math.max(8,Math.round(x.xp/mx*90)):4}px;${x.xp?"":"opacity:.25"}"></i><small class="mu">${DN[x.d.getDay()]}</small></span>`).join("")}</div></div><div class="card g col"><b>Прогресс слов${l=="all"?"":" · "+cap(l)}</b><p>Выучено в уроках: <b>${r.lrn}</b> из ${r.W.length} слов (полностью прошли 7 этапов: ${r.mast}).</p><p>${r.days==null?"Для прогноза нужно позаниматься хотя бы 2 дня (от 14 ответов).":r.left?`При текущем темпе (около ${Math.round(r.rv/7)} повторений в день) все этапы завершатся ориентировочно ${r.days>3650?"более чем через 10 лет":"через "+r.days+" дн."}`:"Все слова полностью освоены!"}</p></div>`},
 home:()=>S.tab=="read"?views.homeR():S.tab=="ai"?views.homeA():S.tab=="box"?views.homeB():views.homeW(),
-homeW:()=>{const d=due().length,tp=pct(S.words),lrn=learnedCnt("all");return(OWN&&!(SB&&SB.session)&&!S.nl?`<div class="card g col"><b>Сохраните прогресс</b><p class="mu">Войдите через Google, и прогресс будет на всех ваших устройствах.</p><button class="btn" data-a="agoogle"><b style="font-size:18px">G</b> Войти через Google</button><button class="x" style="min-height:36px;font-size:14px;align-self:center" data-a="nlater">Позже</button></div>`:"")+(S.words.length?`<div class="card tot"><div><b>Цель дня: ${Math.min(todayXp(),goal())} / ${goal()} слов</b><small>${todayXp()>=goal()?"Цель выполнена 🎉":"Осталось: "+(goal()-todayXp())}</small><i class="bar"><u style="width:${Math.min(100,Math.round(todayXp()/goal()*100))}%"></u></i></div></div><div class="card tot"><div><b>Общий прогресс: ${tp}%</b><small>выучено слов: ${lrn} из ${S.words.length} · курсов: ${S.courses.length}</small><i class="bar"><u style="width:${tp}%"></u></i></div></div>`:"")+(d?`<button class="card due" data-a="review"><b>Пора повторить (+${d} ⭐)</b><span>${d} сл.</span></button>`:"")+
+homeW:()=>{const d=due().length,tp=pct(S.words),lrn=learnedCnt("all");return(OWN&&!(SB&&SB.session)&&!S.nl?`<div class="card g col"><b>Сохраните прогресс</b><p class="mu">Войдите через Google, и прогресс будет на всех ваших устройствах.</p><button class="btn" data-a="agoogle"><b style="font-size:18px">G</b> Войти через Google</button><button class="x" style="min-height:36px;font-size:14px;align-self:center" data-a="nlater">Позже</button></div>`:"")+(S.words.length?`<div class="card tot"><div><b>Цель дня: ${Math.min(todayWd(),goal())} / ${goal()} слов</b><small>${todayWd()>=goal()?"Цель выполнена 🎉":"Осталось: "+(goal()-todayWd())}</small><i class="bar"><u style="width:${Math.min(100,Math.round(todayWd()/goal()*100))}%"></u></i></div></div><div class="card tot"><div><b>Общий прогресс: ${tp}%</b><small>выучено слов: ${lrn} из ${S.words.length} · курсов: ${S.courses.length}</small><i class="bar"><u style="width:${tp}%"></u></i></div></div>`:"")+(d?`<button class="card due" data-a="review"><b>Пора повторить (+${d} ⭐)</b><span>${d} сл.</span></button>`:"")+
   (S.courses.length?S.courses.map(c=>{const cw=S.words.filter(w=>w.c==c.id),n=cw.length,clrn=cw.filter(w=>w.st>0).length,p=prog(c);return`<button class="card" data-a="course" data-id="${c.id}"><span class="tl" style="background:${c.g||GR[0]}">${ic("book",24)}</span><div><b class="tt">${esc(c.title)}</b><small>выучено ${clrn} из ${n} сл. · ${Math.ceil(n/c.per)} ур. · ${p}%</small><i class="bar"><u style="width:${p}%"></u></i></div></button>`}).join(""):`<div class="empty">${knapoLogo(60)}<p>Пока нет курсов.<br>Загрузите файл со словами — курс создастся сам.</p></div>`)+
   `<div class="row"><button class="card" style="flex:1;flex-direction:column;align-items:flex-start" data-a="rep"><b>Недельный отчёт</b><small>⭐ и слова</small></button><button class="card" style="flex:1;flex-direction:column;align-items:flex-start" data-a="board"><b>Рейтинг</b><small>топ игроков</small></button></div><button class="btn sec" data-a="find">${ic("book",20)} Найти курсы других пользователей</button><button class="btn" data-a="import">${ic("plus",20)} Создать курс из файла</button>`},
 homeR:()=>`<h2>Чтение</h2>${aiBn()}<p class="mu">Короткие тексты по теме. Нажмите на любое слово, чтобы увидеть перевод (через словарь или MyMemory).</p>${cfg()}<b>Выберите тему</b><div class="tg">${TOP.map((n,i)=>tile(n,i,`data-a="topic" data-k="${n}"`)).join("")}</div>`,
@@ -660,8 +656,8 @@ homeB:()=>{const v=SBN,rl=S.rl||"английский",cs=S.courses.filter(c=>cl
 homeA:()=>`<h2>Диалог с ИИ</h2>${aiBn()}<p class="mu">Практикуйте разговор с выученными словами. Слов для практики: ${kwList().length}.</p>${cfg()}<b>Выберите сценарий</b><div class="tg">${SC.map((n,i)=>tile(n,i+1,`data-a="chat" data-k="${n}"`)).join("")}</div>`,
 import:()=>`<h2>Новый курс</h2><label class="drop">${ic("file",36)}Выберите или перетащите файл<small>.csv .tsv .txt .xlsx .docx · слова без перевода переведёт MyMemory / ИИ</small><input type="file" hidden accept=".csv,.tsv,.txt,.xlsx,.xls,.docx"></label><textarea class="in" id="paste" rows="7" placeholder="…или вставьте список:&#10;apple — яблоко&#10;to run — бежать"></textarea><div class="row"><button class="btn sec" data-a="sample">Пример</button><button class="btn" data-a="parse">Разобрать</button></div>`,
 preview:()=>{const m=V.pairs.filter(p=>!p[1].trim()).length;return`<h2>Предпросмотр</h2><input class="in" data-f="title" value="${esc(V.title)}" placeholder="Название курса"><small class="mu">Язык слов курса</small><div class="lgs">${LANGS.map(l=>`<button class="chip ${l==V.clang?"on":""}" data-a="clang" data-k="${l}">${cap(l)}</button>`).join("")}</div><div class="row"><select class="in" data-f="per">${[5,10,15,20].map(n=>`<option value="${n}" ${n==V.per?"selected":""}>${n} слов в уроке</option>`).join("")}</select><button class="btn sec" data-a="swap">${ic("swap",20)} Поменять</button></div><input class="in" data-f="lang" value="${esc(V.lang)}" placeholder="Язык перевода"><p class="mu">Найдено: ${V.pairs.length}${V.bad.length?` · пропущено: ${V.bad.length}`:""}${m?` · без перевода: ${m}`:""}</p>${m?`<button class="btn sec" data-a="tr" ${V.busy?"disabled":""}>${ic("lang",20)} ${V.busy?"Перевожу…":"Перевести автоматически"}</button>`:""}${V.pairs.slice(0,50).map((p,i)=>`<div class="pr"><input class="in" data-f="a" data-i="${i}" value="${esc(p[0])}"><input class="in" data-f="b" data-i="${i}" value="${esc(p[1])}" placeholder="нет перевода"><button class="x" data-a="del" data-i="${i}" aria-label="Удалить">${ic("close",18)}</button></div>`).join("")}${V.pairs.length>50?`<p class="mu">…и ещё ${V.pairs.length-50} слов (редактируются после создания курса)</p>`:""}${V.bad.length?`<details><summary>Не распознано (${V.bad.length})</summary>${V.bad.slice(0,50).map(b=>`<p class="mu">Строка ${b[0]}: ${esc(b[1])} — ${b[2]}</p>`).join("")}</details>`:""}<button class="btn" data-a="make" ${V.pairs.length&&!V.busy?"":"disabled"}>Создать курс</button>`},
-lesson:()=>{const c=S.courses.find(x=>x.id==V.id),ws=S.words.filter(w=>w.c==c.id&&w.l==V.i),a=V.i*c.per+1,fresh=ws.every(w=>!w.st);
-  return`<h2>Урок ${V.i+1}</h2><p class="mu">Слова: ${a}–${a+ws.length-1} · ${ws.length} сл.</p>`+ws.map(w=>`<div class="card g"><span class="ring" style="--p:${Math.round(Math.min(w.st,7)/7*100)}"><b>${Math.min(w.st,7)}/7</b></span><div><b class="big3" dir="auto">${esc(dw(w))}</b><small>${esc(w.tr)}</small></div><button class="x" data-a="lsay" data-id="${w.id}" aria-label="Озвучить">${ic("vol",22)}</button></div>`).join("")+`<div class="rbar g"><button class="btn" data-a="lstart">${ic("play",20)} ${fresh?"Начать урок":"Начать повторение"}</button></div>`},
+lesson:()=>{const c=S.courses.find(x=>x.id==V.id),ws=S.words.filter(w=>w.c==c.id&&w.l==V.i),a=V.i*c.per+1,fresh=ws.every(w=>!w.st),rest=ws.filter(w=>!w.st).length,hid=!!V.hid,tg=V.tg||(V.tg=new Set()),vis=w=>hid===tg.has(String(w.id));
+  return`<h2>Урок ${V.i+1}</h2><p class="mu">Слова: ${a}–${a+ws.length-1} · ${ws.length} сл. · выучено ${ws.length-rest}</p><div class="lgs"><button class="chip" data-a="lhide">${hid?"Показать переводы":"Скрыть переводы"}</button></div>`+ws.map(w=>`<div class="card g"><span class="ring" style="--p:${Math.round(Math.min(w.st,7)/7*100)}"><b>${Math.min(w.st,7)}/7</b></span><div><b class="big3" dir="auto">${esc(dw(w))}</b><small class="trt" data-a="ltr" data-id="${w.id}">${vis(w)?esc(w.tr):'<i class="trh"></i>'}</small></div><button class="x" data-a="lsay" data-id="${w.id}" aria-label="Озвучить">${ic("vol",22)}</button></div>`).join("")+`<div class="rbar g"><button class="btn" data-a="lstart">${ic("play",20)} ${fresh?"Начать урок":rest?"Продолжить урок · "+rest:"Начать повторение"}</button></div>`},
 editc:()=>{const per=V.per,np=Math.max(1,Math.ceil(V.ws.length/per)),el=Math.min(V.el,np-1),a=el*per;
   return`<h2>Изменить курс</h2><input class="in" data-f="title" value="${esc(V.title)}" placeholder="Название курса"><small class="mu">Язык слов курса</small><div class="lgs">${LANGS.map(l=>`<button class="chip ${l==V.clang?"on":""}" data-a="clang" data-k="${l}">${cap(l)}</button>`).join("")}</div><select class="in" data-f="per">${[5,10,15,20].map(n=>`<option value="${n}" ${n==per?"selected":""}>${n} слов в уроке</option>`).join("")}</select><select class="in" data-f="el">${[...Array(np).keys()].map(i=>`<option value="${i}" ${i==el?"selected":""}>Урок ${i+1}</option>`).join("")}</select>${V.ws.slice(a,a+per).map((p,j)=>`<div class="pr"><input class="in" data-f="ea" data-i="${a+j}" value="${esc(p.t)}" dir="auto" placeholder="Слово"><input class="in" data-f="eb" data-i="${a+j}" value="${esc(p.tr)}" placeholder="Перевод"><button class="x" data-a="edel" data-i="${a+j}" aria-label="Удалить">${ic("close",18)}</button></div>`).join("")}<button class="btn sec" data-a="eadd">${ic("plus",20)} Добавить слово</button><button class="btn" data-a="esave">Сохранить</button><button class="btn sec" data-a="course" data-id="${V.id}">Отмена</button>`},
 course:()=>{const c=S.courses.find(x=>x.id==V.id),g=[];S.words.forEach(w=>{if(w.c==c.id)(g[w.l]=g[w.l]||[]).push(w)});const allW=g.flat(),p=pct(allW),dn=allW.filter(w=>w.st>0&&w.due<=Date.now()).length,lrn=allW.filter(w=>w.st>0).length;
@@ -689,9 +685,9 @@ set:()=>{const tm=S.theme||"",hk=S.hk!==false,wd=S.wd=="back",g=goal(),
   sec("Арабский язык",`<div class="card g col"><b>Огласовка (харакаты)</b><div class="row">${ch("sethk","1",hk,"Показывать")}${ch("sethk","0",!hk,"Скрывать")}</div><button class="btn sec" data-a="vocal">Добавить огласовку словам (ИИ)</button></div>`)+
   sec("Оформление",`<div class="card g col"><b>Тема</b><div class="row">${ch("setth","",tm=="","Авто")}${ch("setth","light",tm=="light","Светлая")}${ch("setth","dark",tm=="dark","Тёмная")}</div></div><div class="card g col"><b>Цветовая схема</b><div class="pals">${Object.entries(PALS).map(([k,p])=>`<button class="pal ${(S.pal||"indigo")==k?"on":""}" data-a="setpal" data-k="${k}"><span class="sw" style="background:linear-gradient(90deg,${p.sw[0]} 0 25%,${p.sw[1]} 25% 50%,${p.sw[2]} 50% 75%,${p.sw[3]} 75%)"></span><b>${p.n}</b></button>`).join("")}</div></div>`)+
   sec("ИИ и перевод",`<div class="card g col"><b>Ключ Google Gemini</b><p class="mu">Перевод слов по клику работает бесплатно через MyMemory. Для умных текстов и диалогов добавьте ключ с aistudio.google.com/apikey.</p><input class="in" type="password" data-f="aik" value="${esc(AIK())}" placeholder="Ключ Gemini (AIza…)" autocapitalize="off" autocomplete="off"><button class="btn" data-a="aitest">Проверить ключ</button><p class="mu" id="ais">${esc(AIS||(aiOn()?"ИИ Gemini подключён + MyMemory активен":"Активен бесплатный перевод MyMemory + шаблоны"))}</p></div>`)+
-  sec("Статистика",`<div class="card g col"><b>Звёздочки (⭐): ${S.xp}</b><p class="mu">Звёздочки даются за выученные слова и их успешные повторения.</p><button class="btn sec" data-a="xpinfo">Как работают звёздочки и серия</button></div>`)},
-xp:()=>`<h2>Звёздочки и прогресс</h2><div class="card g col"><b>Звёздочки (⭐) — как в мини-приложении Word</b><p>Звёздочки отражают ваш реальный словарный запас и повторения:</p><p class="mu">• <b>+1 ⭐ за каждое выученное слово</b> — когда вы проходите урок со словом без ошибок.<br>• <b>+1 ⭐ за каждое повторённое слово</b> — когда вы успешно повторяете ранее изученное слово.<br>• За простые клики внутри незаконченной тренировки, чат или песочницу лишние очки не начисляются.</p></div><div class="card g col"><b>Серия (огонёк 🔥)</b><p>Число дней подряд, в которые вы завершили хотя бы одну тренировку или повторение слов.</p></div><div class="card g col"><b>Этапы изучения слова (0–7)</b><p>Число в кружке показывает этап интервального повторения (1д → 3д → 1н → 1м → 3м → 6м → 1г). Уже с 1-го этапа слово считается выученным в уроке, а на 7-м этапе — освоенным навсегда.</p></div><div class="card g col"><b>Рейтинг игроков</b><p>В рейтинге отображается ваш никнейм, сколько слов вы выучили и сколько звёздочек заработали за неделю и за всё время.</p></div>`,
-done:()=>{const c=T.key&&T.key.c&&S.courses.find(x=>x.id==T.key.c);return`<div class="empty">${ic(V.pass?"star":"refresh",48)}<h2>${V.sc}%</h2><p>${V.pass?"Тренировка пройдена!":"Нужно не меньше 80%. Попробуйте ещё раз."}</p><p class="mu">+${T.xp} ⭐ (выучено новых: ${T.newW||0} · повторено: ${T.repW||0}) · серия ${S.streak} дн.</p><p class="mu">Освоение слов: ${pct(T.words)}% · всего выучено: ${learnedCnt("all")} сл.${c?` · курс ${prog(c)}%`:""}</p><p class="mu">Цель дня: ${Math.min(todayXp(),goal())} / ${goal()} слов${T.goalHit?" · выполнена 🎉":""}</p></div><button class="btn" data-a="${c?"course":"home"}" data-id="${c?c.id:""}">Продолжить</button>`}
+  sec("Статистика",`<div class="card g col"><b>Звёздочки (⭐): ${S.xp}</b><p class="mu">Одна звёздочка даётся, когда слово впервые доходит до 5 этапа из 7. За повторения звёздочки не начисляются.</p><button class="btn sec" data-a="xpinfo">Как работают звёздочки и серия</button></div>`)},
+xp:()=>`<h2>Звёздочки и прогресс</h2><div class="card g col"><b>Звёздочки (⭐) — как в мини-приложении Word</b><p>Звёздочки отражают ваш реальный словарный запас:</p><p class="mu">• <b>+1 ⭐ за слово, дошедшее до 5 этапа</b> (из 7): один раз для каждого слова.<br>• За повторения, чат и песочницу звёздочки не начисляются.<br>• Цель дня считает слова, которые вы выучили или успешно повторили за день.</p></div><div class="card g col"><b>Серия (огонёк 🔥)</b><p>Число дней подряд, в которые вы завершили хотя бы одну тренировку или повторение слов.</p></div><div class="card g col"><b>Этапы изучения слова (0–7)</b><p>Число в кружке показывает этап интервального повторения (1д → 3д → 1н → 1м → 3м → 6м → 1г). Уже с 1-го этапа слово считается выученным в уроке, а на 7-м этапе — освоенным навсегда.</p></div><div class="card g col"><b>Рейтинг игроков</b><p>В рейтинге отображается ваш никнейм, сколько слов вы выучили и сколько звёздочек заработали за неделю и за всё время.</p></div>`,
+done:()=>{const c=T.key&&T.key.c&&S.courses.find(x=>x.id==T.key.c);return`<div class="empty">${ic(V.pass?"star":"refresh",48)}<h2>${V.sc}%</h2><p>${V.pass?"Тренировка пройдена!":"Нужно не меньше 80%. Попробуйте ещё раз."}</p><p class="mu">+${T.xp} ⭐ (выучено новых: ${T.newW||0} · повторено: ${T.repW||0}) · серия ${S.streak} дн.</p><p class="mu">Освоение слов: ${pct(T.words)}% · всего выучено: ${learnedCnt("all")} сл.${c?` · курс ${prog(c)}%`:""}</p><p class="mu">Цель дня: ${Math.min(todayWd(),goal())} / ${goal()} слов${T.goalHit?" · выполнена 🎉":""}</p></div><button class="btn" data-a="${c?"course":"home"}" data-id="${c?c.id:""}">Продолжить</button>`}
 };
 let lastKey="";
 function R(){
@@ -705,7 +701,8 @@ function R(){
   if(V.v=="chat")scrollTo(0,document.body.scrollHeight);else scrollTo(0,key==lastKey?y:0);
   lastKey=key;
 }
-function act(a,d,el){
+function act(a,d,el){const t=V.v=="run"?T:0,r=act0(a,d,el);if(t&&V.v!="run"&&V.v!="done"){commitRun(t);R()}return r}
+function act0(a,d,el){
   switch(a){
   case"home":V={v:"home"};T=0;break;
   case"theme":S.theme=S.theme==""?"dark":S.theme=="dark"?"light":"";save();th();break;
@@ -722,7 +719,9 @@ function act(a,d,el){
     save();V={v:"course",id};break}
   case"course":V={v:"course",id:d.id};break;
   case"lesson":V={v:"lesson",id:V.id,i:+d.i};break;
-  case"lstart":return start(S.words.filter(w=>w.c==V.id&&w.l==V.i),true,{c:V.id,l:V.i});
+  case"lstart":{const ws=S.words.filter(w=>w.c==V.id&&w.l==V.i),rest=ws.filter(w=>!w.st);return start(rest.length&&rest.length<ws.length?rest:ws,true,{c:V.id,l:V.i})}
+  case"lhide":V.hid=!V.hid;V.tg=new Set();break;
+  case"ltr":{V.tg=V.tg||new Set();const k=String(d.id);V.tg.has(k)?V.tg.delete(k):V.tg.add(k);break}
   case"lsay":{const w=S.words.find(x=>x.id==d.id);return w&&speak(w.v||w.t,wl(w))}
   case"crep":{const now=Date.now(),L=S.words.filter(w=>w.c==V.id&&w.st>0).sort((a,b)=>a.due-b.due);
     if(!L.length)return toast("Сначала пройдите хотя бы один урок");
