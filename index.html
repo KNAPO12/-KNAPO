@@ -17,7 +17,7 @@
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html{scroll-padding-top:env(safe-area-inset-top,0px);touch-action:manipulation;background:var(--bg)}
 body{margin:0;color:var(--tx);font:16px/1.4 -apple-system,system-ui,"SF Pro Text","Segoe UI",Roboto,sans-serif}
-body::after{content:"";position:fixed;inset:0;z-index:-1;transform:translateZ(0);background:radial-gradient(55% 35% at 8% 6%,rgba(110,130,255,.55),transparent 70%),radial-gradient(50% 35% at 96% 30%,rgba(200,110,255,.4),transparent 70%),radial-gradient(60% 40% at 20% 100%,rgba(70,210,255,.38),transparent 70%),var(--bg)}
+body::after{content:"";position:fixed;inset:0;z-index:-1;transform:translateZ(0);background:radial-gradient(55% 35% at 8% 6%,var(--g1,rgba(110,130,255,.55)),transparent 70%),radial-gradient(50% 35% at 96% 30%,var(--g2,rgba(200,110,255,.4)),transparent 70%),radial-gradient(60% 40% at 20% 100%,var(--g3,rgba(70,210,255,.38)),transparent 70%),var(--bg)}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:10}
 button,input,select{font:inherit;color:inherit}button{cursor:pointer;touch-action:manipulation;user-select:none;-webkit-user-select:none;transition:transform .12s,opacity .12s}button:active:not(:disabled){transform:scale(.96)}
 .ic{flex:none;display:block}
@@ -33,10 +33,10 @@ main{max-width:520px;margin:auto;padding:0 16px 32px;display:flex;flex-direction
 h2{margin:4px 0}.mu{color:var(--mu);margin:0}
 .card{display:flex;align-items:center;gap:12px;text-align:left;background:var(--gl);border:1px solid var(--st);box-shadow:var(--hi),var(--sh);border-radius:24px;padding:14px;width:100%;border-width:1px}
 .card:disabled{opacity:.55}.card div{flex:1;min-width:0}.card small{display:block;color:var(--mu)}.tt{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.tl{width:46px;height:46px;border-radius:15px;display:grid;place-items:center;color:#fff;font-weight:700;font-size:20px;flex:none;background:linear-gradient(135deg,var(--ac),var(--ac2));box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 4px 12px rgba(85,96,255,.3)}
+.tl{width:46px;height:46px;border-radius:15px;display:grid;place-items:center;color:#fff;font-weight:700;font-size:20px;flex:none;background:linear-gradient(135deg,var(--ac),var(--ac2));box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 4px 12px color-mix(in srgb,var(--ac) 30%,transparent)}
 .tot{background:linear-gradient(135deg,rgba(125,140,255,.3),var(--gl))}
 .bar{display:block;height:7px;border-radius:4px;background:var(--bd);margin-top:7px;overflow:hidden}.bar u{display:block;height:100%;border-radius:4px;background:linear-gradient(90deg,var(--ac),var(--ac2));transition:width .3s}
-.btn{min-height:50px;border:0;border-radius:25px;background:linear-gradient(135deg,var(--ac),var(--ac2));color:#fff;font-weight:600;padding:0 20px;width:100%;display:inline-flex;align-items:center;justify-content:center;gap:8px;box-shadow:inset 0 1px 0 rgba(255,255,255,.45),0 8px 20px rgba(85,96,255,.35)}
+.btn{min-height:50px;border:0;border-radius:25px;background:linear-gradient(135deg,var(--ac),var(--ac2));color:#fff;font-weight:600;padding:0 20px;width:100%;display:inline-flex;align-items:center;justify-content:center;gap:8px;box-shadow:inset 0 1px 0 rgba(255,255,255,.45),0 8px 20px color-mix(in srgb,var(--ac) 35%,transparent)}
 .btn.sec{background:var(--gl);color:var(--tx);border:1px solid var(--st);box-shadow:var(--hi);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px)}.btn:disabled{opacity:.5;box-shadow:none}
 .row{display:flex;gap:10px}.row .in{min-width:0}
 .in{min-height:46px;width:100%;border:1px solid var(--st);border-radius:18px;background:var(--gl);color:var(--tx);padding:0 14px;box-shadow:var(--hi)}textarea.in{padding:12px}
@@ -92,7 +92,7 @@ button.st{border:0;background:none;min-height:44px}
 main>.card{content-visibility:auto;contain-intrinsic-size:auto 84px}
 .rbar{position:fixed;z-index:20;left:50%;transform:translateX(-50%);bottom:calc(10px + env(safe-area-inset-bottom,0px));width:min(92vw,520px);display:flex;flex-direction:column;gap:2px;padding:10px 12px 6px;border-radius:30px}
 .tlink{border:0;background:none;color:var(--ac);min-height:40px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:6px}
-.wstat{display:inline-flex;align-items:center;gap:5px;margin-top:4px;padding:2px 9px;border-radius:10px;background:rgba(85,96,255,.14);color:var(--ac);font-size:12px;font-weight:600}
+.wstat{display:inline-flex;align-items:center;gap:5px;margin-top:4px;padding:2px 9px;border-radius:10px;background:color-mix(in srgb,var(--ac) 14%,transparent);color:var(--ac);font-size:12px;font-weight:600}
 html,body{overflow-x:hidden}
 main,.card,.card div,.exi,.big,.opts,.comp,.b{min-width:0;max-width:100%}
 main p,.card p,.exi p,.big,.card b,.card small,.b p,.tt{overflow-wrap:anywhere;word-break:break-word}
@@ -111,6 +111,7 @@ header{gap:2px;padding:3px 6px}
 .ph{color:var(--mu);font-size:.55em;opacity:.85}.blank{border-color:var(--kc,var(--bd))}.lb{margin:0 6px;background:none;border:0;font-size:20px;vertical-align:middle}
 .bsh-bg{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:60}.bsh{position:fixed;left:0;right:0;bottom:0;z-index:61;background:var(--bg);border-radius:24px 24px 0 0;padding:20px 18px calc(env(safe-area-inset-bottom,0px) + 22px);box-shadow:0 -10px 40px rgba(0,0,0,.45);display:flex;flex-direction:column;gap:10px;max-height:80vh;overflow:auto}.bsh p{margin:0}.bsh>b{font-size:20px}
 .bsh mark{background:color-mix(in srgb,var(--kc) 28%,transparent);color:inherit;border-radius:6px;padding:0 4px;border-bottom:2px solid var(--kc)}.tks{display:flex;flex-wrap:wrap;gap:8px}.tk{display:flex;flex-direction:column;align-items:center;padding:6px 10px;border-radius:12px;border-bottom:3px solid var(--kc);background:var(--gl)}.tk small{font-size:11px;color:var(--mu)}
+.pals{display:grid;grid-template-columns:1fr 1fr;gap:10px}.pal{display:flex;flex-direction:column;gap:8px;align-items:center;padding:10px;border-radius:18px;border:2px solid var(--bd);background:var(--gl);color:var(--tx);font:inherit}.pal.on{border-color:var(--ac)}.pal .sw{width:100%;height:28px;border-radius:14px}
 </style>
 </head>
 <body>
@@ -131,7 +132,21 @@ S=S||{courses:[],words:[],xp:0,streak:0,last:"",theme:""};
 let svT=0;const flush=()=>{try{localStorage.setItem("wf1",JSON.stringify(S))}catch(e){}};
 let pt=0;const save=()=>{S.updated=Date.now();clearTimeout(svT);svT=setTimeout(flush,600);if(sbOn()){clearTimeout(pt);pt=setTimeout(push,15000)}};
 addEventListener("pagehide",flush);document.addEventListener("visibilitychange",()=>{if(document.hidden){flush();if(sbOn()&&pt){clearTimeout(pt);pt=0;push()}}else if(sbOn()&&["home","course","sync"].includes(V.v))pull().then(c=>{if(c)R()})});
-const th=()=>{S.theme?document.documentElement.dataset.theme=S.theme:delete document.documentElement.dataset.theme};
+const PALS={
+indigo:{n:"Индиго",sw:["#070918","#3a3f8f","#5560ff","#a45cff"]},
+ocean:{n:"Океан",sw:["#0B132B","#3A506B","#5BC0DE","#D97706"],d:"#0B132B",m:"#1C2541",l:"#3A506B",a:"#3F8FB8",b:"#D97706",tx:"#EAF3FA",lb:"#E9F0F7",g:["#F28C28","#5BC0DE","#5BC0DE"]},
+forest:{n:"Лес",sw:["#0F1F17","#3E5A3F","#6B7F67","#C7CBB8"],d:"#0F1F17",m:"#1E3A2E",l:"#3E5A3F",a:"#6E9457",b:"#3E5A3F",tx:"#EDF1E3",lb:"#ECEFE3",g:["#C7D45A","#C7D45A","#6B7F67"]},
+coffee:{n:"Кофе",sw:["#1A120E","#6B4A2E","#A88462","#D5C4AE"],d:"#1A120E",m:"#3A2418",l:"#6B4A2E",a:"#A07650",b:"#6B4A2E",tx:"#F4EBE0",lb:"#F3EBE2",g:["#E39A5A","#E39A5A","#A88462"]},
+violet:{n:"Ночь",sw:["#0E0B1D","#5A3B8C","#8B7CC7","#C9C2E3"],d:"#0E0B1D",m:"#2A1E4D",l:"#5A3B8C",a:"#7C6BC4",b:"#5A3B8C",tx:"#F1EEFB",lb:"#EFEBFA",g:["#B77CFF","#8B7CC7","#B77CFF"]}};
+const hx=(h,a)=>{const n=parseInt(h.slice(1),16);return`rgba(${n>>16},${n>>8&255},${n&255},${a})`};
+function pal(){const r=document.documentElement,P=PALS[S.pal]||PALS.indigo,K=["--bg","--tx","--mu","--ac","--ac2","--gl","--gl2","--bd","--g1","--g2","--g3"];
+  if(!P.d){K.forEach(k=>r.style.removeProperty(k));return}
+  const dk=r.dataset.theme?r.dataset.theme=="dark":matchMedia("(prefers-color-scheme:dark)").matches,
+  v=dk?{"--bg":P.d,"--tx":P.tx,"--mu":hx(P.tx,.62),"--gl":hx(P.m,.55),"--gl2":hx(P.l,.55),"--bd":hx(P.tx,.13)}:{"--bg":P.lb,"--tx":P.d,"--mu":P.l,"--bd":hx(P.l,.2)};
+  v["--ac"]=P.a;v["--ac2"]=P.b;P.g.forEach((c,i)=>v["--g"+(i+1)]=hx(c,(dk?[.5,.4,.35]:[.4,.32,.28])[i]));
+  K.forEach(k=>v[k]?r.style.setProperty(k,v[k]):r.style.removeProperty(k))}
+try{matchMedia("(prefers-color-scheme:dark)").addEventListener("change",pal)}catch(e){}
+const th=()=>{S.theme?document.documentElement.dataset.theme=S.theme:delete document.documentElement.dataset.theme;pal()};
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const uid=()=>Math.random().toString(36).slice(2,9);
 const toast=m=>{const t=$("#toast");t.textContent=m;t.className="show";setTimeout(()=>t.className="",2600)};
@@ -672,7 +687,7 @@ set:()=>{const tm=S.theme||"",hk=S.hk!==false,wd=S.wd=="back",g=goal(),
   sec("Аккаунт",`<button class="card g" data-a="syn"><span class="tl" style="background:linear-gradient(135deg,var(--ac),var(--ac2))">${ic("cloud",22)}</span><div><b>Синхронизация</b><small>${sbOn()?"Подключено":"Не подключено"}</small></div></button><div class="card g col"><b>Ваш никнейм в рейтинге</b><div class="row"><input class="in" data-f="nick" value="${esc(S.nick||"")}" placeholder="Ваш никнейм…" maxlength="24"><button class="btn" style="width:auto;min-width:120px" data-a="savenick">Сохранить</button></div></div>`)+
   sec("Обучение",`<p class="mu">Дневная цель: сколько слов выучить или повторить за день.</p>${GOALS.map(([n,t,e])=>`<button class="card g goal ${n==g?"on":""}" data-a="goal" data-k="${n}"><span class="em">${e}</span><b style="flex:1">${t}</b><span class="mu">${n} слов</span></button>`).join("")}<div class="card g col"><b>Режим «Письмо»</b><div class="row">${ch("setwd","fwd",!wd,"Слово → перевод")}${ch("setwd","back",wd,"Перевод → слово")}</div></div>`)+
   sec("Арабский язык",`<div class="card g col"><b>Огласовка (харакаты)</b><div class="row">${ch("sethk","1",hk,"Показывать")}${ch("sethk","0",!hk,"Скрывать")}</div><button class="btn sec" data-a="vocal">Добавить огласовку словам (ИИ)</button></div>`)+
-  sec("Оформление",`<div class="card g col"><b>Тема</b><div class="row">${ch("setth","",tm=="","Авто")}${ch("setth","light",tm=="light","Светлая")}${ch("setth","dark",tm=="dark","Тёмная")}</div></div>`)+
+  sec("Оформление",`<div class="card g col"><b>Тема</b><div class="row">${ch("setth","",tm=="","Авто")}${ch("setth","light",tm=="light","Светлая")}${ch("setth","dark",tm=="dark","Тёмная")}</div></div><div class="card g col"><b>Цветовая схема</b><div class="pals">${Object.entries(PALS).map(([k,p])=>`<button class="pal ${(S.pal||"indigo")==k?"on":""}" data-a="setpal" data-k="${k}"><span class="sw" style="background:linear-gradient(90deg,${p.sw[0]} 0 25%,${p.sw[1]} 25% 50%,${p.sw[2]} 50% 75%,${p.sw[3]} 75%)"></span><b>${p.n}</b></button>`).join("")}</div></div>`)+
   sec("ИИ и перевод",`<div class="card g col"><b>Ключ Google Gemini</b><p class="mu">Перевод слов по клику работает бесплатно через MyMemory. Для умных текстов и диалогов добавьте ключ с aistudio.google.com/apikey.</p><input class="in" type="password" data-f="aik" value="${esc(AIK())}" placeholder="Ключ Gemini (AIza…)" autocapitalize="off" autocomplete="off"><button class="btn" data-a="aitest">Проверить ключ</button><p class="mu" id="ais">${esc(AIS||(aiOn()?"ИИ Gemini подключён + MyMemory активен":"Активен бесплатный перевод MyMemory + шаблоны"))}</p></div>`)+
   sec("Статистика",`<div class="card g col"><b>Звёздочки (⭐): ${S.xp}</b><p class="mu">Звёздочки даются за выученные слова и их успешные повторения.</p><button class="btn sec" data-a="xpinfo">Как работают звёздочки и серия</button></div>`)},
 xp:()=>`<h2>Звёздочки и прогресс</h2><div class="card g col"><b>Звёздочки (⭐) — как в мини-приложении Word</b><p>Звёздочки отражают ваш реальный словарный запас и повторения:</p><p class="mu">• <b>+1 ⭐ за каждое выученное слово</b> — когда вы проходите урок со словом без ошибок.<br>• <b>+1 ⭐ за каждое повторённое слово</b> — когда вы успешно повторяете ранее изученное слово.<br>• За простые клики внутри незаконченной тренировки, чат или песочницу лишние очки не начисляются.</p></div><div class="card g col"><b>Серия (огонёк 🔥)</b><p>Число дней подряд, в которые вы завершили хотя бы одну тренировку или повторение слов.</p></div><div class="card g col"><b>Этапы изучения слова (0–7)</b><p>Число в кружке показывает этап интервального повторения (1д → 3д → 1н → 1м → 3м → 6м → 1г). Уже с 1-го этапа слово считается выученным в уроке, а на 7-м этапе — освоенным навсегда.</p></div><div class="card g col"><b>Рейтинг игроков</b><p>В рейтинге отображается ваш никнейм, сколько слов вы выучили и сколько звёздочек заработали за неделю и за всё время.</p></div>`,
@@ -758,6 +773,7 @@ function act(a,d,el){
   }
   case"cl":{const c=S.courses.find(x=>x.id==V.id);c.lang=d.k;c.lcust=1;delete LC[c.id];save();break}
   case"goal":S.goal=+d.k;save();break;
+  case"setpal":S.pal=d.k;save();pal();break;
   case"editc":{const c=S.courses.find(x=>x.id==V.id);if(!c||!isOwn(c))return toast("Изменять курс может только его автор");
     const ws=S.words.filter(w=>w.c==c.id).sort((a,b)=>a.l-b.l).map(w=>({id:w.id,t:w.t,tr:w.tr}));
     V={v:"editc",id:c.id,title:c.title,per:c.per,clang:cl(c),clc:1,ws,el:0};break}
