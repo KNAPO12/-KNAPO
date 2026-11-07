@@ -514,22 +514,15 @@ const detLang=t=>AR.test(t)?"арабский":"английский";
 function bookParse(txt,name){
   txt=String(txt).replace(/^\uFEFF/,"").trim();
   try{if(txt[0]=="{"){const j=JSON.parse(txt),ls=(j.lessons||j.ls||[]).map(l=>({t:String(l.t||l.title||""),tt:l.tt||"",s:(l.s||l.sentences||[]).map(e=>({a:String(e.a||e.s||""),t:e.t||"",n:e.n||""})).filter(e=>e.a)})).filter(l=>l.s.length);if(ls.length)return{title:j.title||name,lang:LANGS.includes(j.lang)?j.lang:detLang(ls[0].s[0].a),ls}}}catch(e){}
-  let title=name,lang="",ls=[],cur=null,m,buf="";
-  const flushBuf=()=>{
-    const b=buf.replace(/\s+/g," ").trim();buf="";if(!b)return;
+  let title=name,lang="",ls=[],cur=null,m;
+  for(const raw of txt.split(/\r?\n/)){const l=raw.trim();if(!l)continue;
+    if(m=l.match(/^@lang\s+(\S+)/i)){lang=m[1].toLowerCase();continue}
+    if(m=l.match(/^##\s*(.*)$/)){const p=m[1].split("|").map(x=>x.trim());cur={t:p[0]||"Урок "+(ls.length+1),tt:p[1]||"",s:[]};ls.push(cur);continue}
+    if(m=l.match(/^#\s*(.*)$/)){title=m[1].trim()||title;continue}
     if(!cur){cur={t:"Урок 1",tt:"",s:[]};ls.push(cur)}
-    (b.match(/[^.!?؟…]+[.!?؟…]+\s*|[^.!?؟…]+$/g)||[b]).forEach(x=>{x=x.trim();if(x)cur.s.push({a:x,t:"",n:""})});
-  };
-  for(const raw of txt.split(/\r?\n/)){const l=raw.trim();
-    if(!l){flushBuf();continue}
-    if(m=l.match(/^@lang\s+(\S+)/i)){flushBuf();lang=m[1].toLowerCase();continue}
-    if(m=l.match(/^##\s*(.*)$/)){flushBuf();const p=m[1].split("|").map(x=>x.trim());cur={t:p[0]||"Урок "+(ls.length+1),tt:p[1]||"",s:[]};ls.push(cur);continue}
-    if(m=l.match(/^#\s*(.*)$/)){flushBuf();title=m[1].trim()||title;continue}
     const p=l.split(/\s*\|\s*|\t/);
-    if(p.length>1){flushBuf();if(!cur){cur={t:"Урок 1",tt:"",s:[]};ls.push(cur)}cur.s.push({a:p[0],t:p[1]||"",n:p[2]||""})}
-    else{buf+=(buf?" ":"")+l}
-  }
-  flushBuf();
+    if(p.length==1&&l.length>140)(l.match(/[^.!?؟…]+[.!?؟…]*\s*/g)||[l]).forEach(x=>{x=x.trim();if(x)cur.s.push({a:x,t:"",n:""})});
+    else cur.s.push({a:p[0],t:p[1]||"",n:p[2]||""})}
   ls=ls.filter(l=>l.s.length);if(!ls.length)return null;
   if(ls.length==1&&ls[0].t=="Урок 1"&&ls[0].s.length>12){const all=ls[0].s;ls=[];for(let i=0;i<all.length;i+=10)ls.push({t:"Урок "+(ls.length+1),tt:"",s:all.slice(i,i+10)})}
   return{title,lang:LANGS.includes(lang)?lang:detLang(ls[0].s[0].a),ls}}
@@ -573,7 +566,7 @@ const exb=w=>{const a=V.ans!=null,rev=a||V.flip;if((S.mode||"quiz")=="type"&&!a)
 const sheet=w=>`<div class="sheet"><div class="bk" data-a="shut"></div><div class="pn g"><button class="x cl" data-a="shut" aria-label="Закрыть">${ic("close")}</button><div class="tl" style="margin:0 auto;width:60px;height:60px">${ic("cards",30)}</div><h2>Прогресс повторений</h2><p>Этап ${w.st} из 7 для этого слова</p><p class="mu">Каждое успешное повторение продвигает слово дальше. Чем выше этап, тем больше интервал до следующего появления слова.</p><div class="sg">${["1д","3д","1н","1м","3м","6м","1г"].map((l,i)=>`<div><i class="${i<w.st?"on":""}"></i><small>${l}</small></div>`).join("")}</div><p class="mu">После 7-го этапа слово считается полностью освоенным.</p><button class="btn" data-a="shut">Понятно</button></div></div>`;
 /* ===== Песочница (Active Semantic Sandbox) ===== */
 let BRD={rows:null,busy:0,err:"",me:"",l:"all"},REP={l:"all"};
-let SBN={cid:"all",lid:"all",busy:0,items:null,bank:[],fill:{},sel:null,chk:0,err:"",tk:0};
+let SBN={cid:"all",busy:0,items:null,bank:[],fill:{},sel:null,chk:0,err:"",tk:0};
 const rb=()=>{if(V.v=="home"&&S.tab=="box")R()};
 /*HELP*/
 const KL={v:["глагол","#6d7bff"],n:["существительное","#2fbf80"],a:["прилагательное","#f5a524"],p:["предлог","#f06fb2"],r:["артикль","#22b8cf"],o:["служебное слово","#a78bfa"]},
@@ -630,31 +623,15 @@ document.addEventListener("click",e=>{if(SUPC){e.stopPropagation();e.preventDefa
 async function vocalize(ws){if(S.hk===false)return;const need=[];ws.forEach(w=>(w.ex||[]).forEach(e=>{if(!e.v&&!e.m&&!/[\u064B-\u0652]/.test(e.s))need.push(e)}));if(!need.length)return;const sm=await getSm();if(!sm)return;
   try{const a=jp((await sm("Добавь полную огласовку (харакāты) к каждому арабскому предложению, не меняя слов и их порядка. Верни ТОЛЬКО JSON-массив строк той же длины: "+JSON.stringify(need.map(e=>e.s)),{modelTier:"quick"})).text);need.forEach((e,i)=>{if(typeof a[i]=="string"&&strip(a[i])==strip(e.s)){e.s=a[i];e.v=1}});save()}catch(e){}}
 async function boxBuild(){const v=SBN,tk=++v.tk,rl=S.rl||"английский";v.busy=1;v.err="";v.items=null;v.fill={};v.sel=null;v.chk=0;v.sh=null;rb();
-  const allLang=S.words.filter(w=>wl(w)==rl);
-  if(!allLang.length){v.busy=0;v.err="Нет слов на этом языке. Создайте курс.";return rb()}
-  const courseWords=allLang.filter(w=>v.cid=="all"||w.c==v.cid);
-  const learnedCourse=courseWords.filter(w=>w.st>0);
-  if(!learnedCourse.length){v.busy=0;v.err="В выбранном курсе пока нет выученных слов. Пройдите хотя бы один урок в режиме «Заучивание»!";return rb()}
-  let primary=v.cid!="all"&&v.lid!="all"?learnedCourse.filter(w=>w.l==+v.lid):learnedCourse;
-  if(v.cid!="all"&&v.lid!="all"&&!primary.length){v.busy=0;v.err="В этом уроке ещё нет выученных слов. Сначала пройдите его в «Заучивании» или выберите другой урок.";return rb()}
-  let extra=v.cid!="all"&&v.lid!="all"?learnedCourse.filter(w=>w.l!=+v.lid):[];
-  let pool=[...shuf(primary),...shuf(extra)];
-  let W=pool.slice(0,16);
+  let W=S.words.filter(w=>wl(w)==rl&&(v.cid=="all"||w.c==v.cid));const L=W.filter(w=>w.st>0);W=shuf(L.length>=4?L:W).slice(0,8);
+  if(!W.length){v.busy=0;v.err="Нет слов на этом языке. Создайте курс.";return rb()}
   try{await ldBatch(W,1);if(rl=="арабский")await vocalize(W)}catch(e){}
-  let items=[],usedS=new Set();
-  const pickFrom=(ws,allowDupWord)=>{
-    for(const w of ws){if(items.length>=10)break;
-      const q=strip(w.t).toLowerCase().replace(/^to\s+/,"");
-      const exs=shuf((w.ex||[]).slice()).sort((a,b)=>!!a.m-!!b.m);
-      for(const e of exs){if(usedS.has(e.s))continue;
-        const m=[...e.s.matchAll(/[\p{L}\p{M}'’-]+/gu)].find(x=>{const k=strip(x[0]).toLowerCase();return k==q||k=="ال"+q||lemmaTry(k).includes(q)});
-        if(m){usedS.add(e.s);items.push({pre:e.s.slice(0,m.index),ans:m[0],post:e.s.slice(m.index+m[0].length),t:e.t,m:e.m,k:kindOf(w,rl)});if(!allowDupWord)break;if(items.length>=10)break}
-      }
-    }
-  };
-  pickFrom(W,false);
-  if(items.length<10)pickFrom(W,true);
-  const good=items.filter(i=>!i.m);if(good.length>=10)items=good.slice(0,10);else items=items.slice(0,Math.max(10,items.length));
+  let items=[];
+  for(const w of W){const q=strip(w.t).toLowerCase().replace(/^to\s+/,"");
+    for(const e of shuf((w.ex||[]).slice()).sort((a,b)=>!!a.m-!!b.m)){const m=[...e.s.matchAll(/[\p{L}\p{M}'’-]+/gu)].find(x=>{const k=strip(x[0]).toLowerCase();return k==q||k=="ال"+q||lemmaTry(k).includes(q)});
+      if(m){items.push({pre:e.s.slice(0,m.index),ans:m[0],post:e.s.slice(m.index+m[0].length),t:e.t,m:e.m,k:kindOf(w,rl)});break}}
+    if(items.length>=6)break}
+  const good=items.filter(i=>!i.m);if(good.length>=3)items=good;
   if(tk!=v.tk)return;v.busy=0;
   if(items.length)Object.assign(v,{items,bank:shuf(items.map((_,i)=>i))});else v.err="Не удалось подобрать предложения. Попробуйте ещё раз.";
   rb()}
@@ -710,12 +687,7 @@ homeR:()=>{const bs=BK();
   return`<h2>Чтение</h2>${aiBn()}`+(bs.length?bs.map(b=>`<div class="card g col"><div class="row" style="align-items:center"><div style="flex:1"><b class="tt" dir="auto">${esc(b.title)}</b><small class="mu">${cap(b.lang)} · урок ${b.p.l+1} из ${b.ls.length}</small></div><button class="x" data-a="bdel" data-id="${b.id}" aria-label="Удалить">${V.cd==b.id?"Удалить?":ic("close",18)}</button></div><i class="bar"><u style="width:${Math.round((b.dn||[]).length/b.ls.length*100)}%"></u></i><button class="btn" data-a="bopen" data-id="${b.id}">${ic("play",20)} Продолжить чтение</button></div>`).join(""):`<div class="empty"><p>Пока нет книг. Загрузите свою книгу из файла или создайте короткий текст по теме.</p></div>`)+
   `<label class="btn sec">${ic("plus",20)} Добавить книгу из файла<input type="file" data-f="bk" accept=".txt,.json,.docx" hidden></label><button class="btn sec" data-a="bprompt">Скопировать промпт для ИИ</button>${V.pr?`<textarea class="in" readonly rows="8" onclick="this.select()">${esc(BKP)}</textarea>`:""}<b>Быстрый текст по теме</b>${cfg()}<div class="tg">${TOP.map((n,i)=>tile(n,i,`data-a="topic" data-k="${n}"`)).join("")}</div>`},
 homeB:()=>{const v=SBN,rl=S.rl||"английский",cs=S.courses.filter(c=>cl(c)==rl),rtl=rl=="арабский",dv=t=>rtl&&S.hk===false?strip(t):t;if(!v.items&&!v.busy&&!v.err)setTimeout(boxBuild);
-  const curC=v.cid!="all"?cs.find(c=>c.id==v.cid):null;
-  let lbar="";
-  if(curC){const cw=S.words.filter(w=>w.c==curC.id),maxL=cw.reduce((m,w)=>Math.max(m,w.l||0),-1),ls=[];
-    for(let i=0;i<=maxL;i++){const lw=cw.filter(w=>w.l==i),lrn=lw.filter(w=>w.st>0).length;if(lrn>0||(curC.done||[]).includes(i))ls.push([String(i),`Урок ${i+1} (${lrn}/${lw.length})`])}
-    lbar=ls.length?`<div class="lgs">${[["all","Все пройденные"],...ls].map(([k,n])=>`<button class="chip ${k==String(v.lid)?"on":""}" data-a="blid" data-k="${k}">${esc(n)}</button>`).join("")}</div>`:`<p class="mu">В этом курсе ещё нет пройденных уроков.</p>`}
-  const top=`<h2>Песочница</h2>${langs()}`+(cs.length?`<div class="lgs">${[["all","Все курсы"],...cs.map(c=>[c.id,c.title])].map(([k,n])=>`<button class="chip ${k==v.cid?"on":""}" data-a="bcid" data-k="${k}">${esc(n)}</button>`).join("")}</div>`:"")+lbar;
+  const top=`<h2>Песочница</h2>${langs()}`+(cs.length?`<div class="lgs">${[["all","Все курсы"],...cs.map(c=>[c.id,c.title])].map(([k,n])=>`<button class="chip ${k==v.cid?"on":""}" data-a="bcid" data-k="${k}">${esc(n)}</button>`).join("")}</div>`:"");
   if(v.busy||!v.items)return top+(v.err?`<div class="empty"><p>${esc(v.err)}</p></div><button class="btn" data-a="bnew">Повторить</button>`:`<div class="card g col"><i class="sk"></i><i class="sk" style="width:80%"></i><i class="sk" style="width:60%"></i></div><p class="mu">Подбираю предложения…</p>`);
   const used=new Set(Object.values(v.fill)),ok=j=>v.chk&&v.fill[j]!=null&&nz(v.items[v.fill[j]].ans)==nz(v.items[j].ans),done=v.items.every((_,j)=>v.fill[j]!=null),good=v.chk&&v.items.every((_,j)=>ok(j)),kinds=[...new Set(v.items.map(i=>i.k))];
   return top+`<p class="mu">Перетащите слово в пропуск или нажмите на него. Цвет подсказывает, какая часть речи нужна.</p><div class="lgd">${kinds.map(k=>`<span><i style="--kc:${KL[k][1]}"></i>${KL[k][0]}</span>`).join("")}</div><div class="card g col cz">`+v.items.map((it,j)=>`<div class="cl"><p dir="${rtl?"rtl":"auto"}" class="${rtl?"ar":""}">${esc(dv(it.pre))}<button class="blank ${v.sel===j?"sel":""} ${v.chk&&v.fill[j]!=null?(ok(j)?"ok":"bad"):""}" style="--kc:${KL[it.k][1]}" data-a="bblank" data-i="${j}" ${v.fill[j]!=null?'data-dg="f"':""}>${v.fill[j]!=null?esc(dv(v.items[v.fill[j]].ans)):`<span class="ph">[${PH[it.k]}]</span>`}</button>${esc(dv(it.post))}${ok(j)?`<button class="lb" data-a="bwin" data-i="${j}" aria-label="Разбор">💡</button>`:""}</p><small dir="ltr">${esc(it.t)}</small></div>`).join("")+`</div><div class="bank">${v.bank.filter(i=>!used.has(i)).map(i=>`<button class="wchip ${rtl?"ar":""}" data-a="bpick" data-i="${i}" data-dg="b">${esc(dv(v.items[i].ans))}</button>`).join("")}</div>`+(good?`<div class="fb ok"><span class="fi">${ic("check",16)}</span><span>Отлично! Всё верно. Нажмите 💡, чтобы увидеть разбор.</span></div>`:v.chk?`<p class="mu">Нажмите «Проверить» ещё раз после исправления.</p>`:"")+`<div class="row"><button class="btn sec" data-a="bre">Заново</button><button class="btn" data-a="${good?"bnew":"bchk"}" ${done?"":"disabled"}>${good?"Новый текст":"Проверить"}</button></div>`+sheetHtml(v,rl)},
@@ -878,14 +850,13 @@ function act0(a,d,el){
   case"aitest":return testAI();
   case"vocal":return vocalAll();
   case"rep":V={v:"rep"};break;
-  case"lang":S.rl=d.k;save();Object.assign(SBN,{cid:"all",lid:"all",items:null,err:"",busy:0,tk:SBN.tk+1});break;
+  case"lang":S.rl=d.k;save();Object.assign(SBN,{cid:"all",items:null,err:"",busy:0,tk:SBN.tk+1});break;
   case"clang":V.clang=d.k;V.clc=1;break;
   case"rpl":REP.l=d.k;break;
   case"bdl":BRD.l=d.k;loadBoard();return;
   case"board":V={v:"board"};loadBoard();break;
   case"bdref":loadBoard();return;
-  case"bcid":SBN.cid=d.k;SBN.lid="all";return boxBuild();
-  case"blid":SBN.lid=d.k;return boxBuild();
+  case"bcid":SBN.cid=d.k;return boxBuild();
   case"bnew":return boxBuild();
   case"bre":SBN.fill={};SBN.sel=null;SBN.chk=0;SBN.sh=null;break;
   case"bchk":{const v=SBN,bad=v.items.map((_,j)=>j).filter(j=>nz(v.items[v.fill[j]].ans)!=nz(v.items[j].ans));v.chk=1;v.sh=bad.length?{t:"err",l:bad,n:0}:null;break}
