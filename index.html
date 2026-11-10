@@ -11,13 +11,13 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/mammoth@1.6.0/mammoth.browser.min.js"></script>
 <style>
-:root{--bg:#eceffd;--tx:#12142a;--mu:#6a6f8c;--ac:#5560ff;--ac2:#a45cff;--ok:#10b981;--bad:#f43f5e;--gl:rgba(255,255,255,.55);--gl2:rgba(255,255,255,.9);--st:rgba(255,255,255,.85);--sh:0 10px 30px rgba(60,70,150,.14);--hi:inset 0 1px 0 #fff,inset 0 -1px 0 rgba(255,255,255,.3);--bd:rgba(90,100,160,.18);color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#070918;--tx:#eef0ff;--mu:#9ca2c8;--gl:rgba(48,54,98,.42);--gl2:rgba(86,94,160,.6);--st:rgba(255,255,255,.16);--sh:0 10px 30px rgba(0,0,0,.45);--hi:inset 0 1px 0 rgba(255,255,255,.25),inset 0 -1px 0 rgba(255,255,255,.04);--bd:rgba(255,255,255,.12);color-scheme:dark}}
-:root[data-theme="dark"]{--bg:#070918;--tx:#eef0ff;--mu:#9ca2c8;--gl:rgba(48,54,98,.42);--gl2:rgba(86,94,160,.6);--st:rgba(255,255,255,.16);--sh:0 10px 30px rgba(0,0,0,.45);--hi:inset 0 1px 0 rgba(255,255,255,.25),inset 0 -1px 0 rgba(255,255,255,.04);--bd:rgba(255,255,255,.12);color-scheme:dark}
+:root{--bg:#090D16;--tx:#FFFFFF;--mu:#94A3B8;--ac:#2563EB;--ac2:#3B82F6;--ok:#10b981;--bad:#f43f5e;--gl:rgba(19,27,46,.6);--gl2:rgba(19,27,46,.92);--st:rgba(30,41,59,.8);--sh:0 10px 30px rgba(0,0,0,.5);--hi:inset 0 1px 0 rgba(255,255,255,.07),inset 0 -1px 0 rgba(255,255,255,.02);--bd:rgba(148,163,184,.18);color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#090D16;--tx:#FFFFFF;--mu:#94A3B8;--gl:rgba(19,27,46,.6);--gl2:rgba(19,27,46,.92);--st:rgba(30,41,59,.8);--sh:0 10px 30px rgba(0,0,0,.5);--hi:inset 0 1px 0 rgba(255,255,255,.07),inset 0 -1px 0 rgba(255,255,255,.02);--bd:rgba(148,163,184,.18);color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#090D16;--tx:#FFFFFF;--mu:#94A3B8;--gl:rgba(19,27,46,.6);--gl2:rgba(19,27,46,.92);--st:rgba(30,41,59,.8);--sh:0 10px 30px rgba(0,0,0,.5);--hi:inset 0 1px 0 rgba(255,255,255,.07),inset 0 -1px 0 rgba(255,255,255,.02);--bd:rgba(148,163,184,.18);color-scheme:dark}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html{scroll-padding-top:env(safe-area-inset-top,0px);touch-action:manipulation;background:var(--bg)}
 body{margin:0;color:var(--tx);font:16px/1.4 -apple-system,system-ui,"SF Pro Text","Segoe UI",Roboto,sans-serif}
-body::after{content:"";position:fixed;inset:0;z-index:-1;transform:translateZ(0);background:radial-gradient(55% 35% at 8% 6%,var(--g1,rgba(110,130,255,.55)),transparent 70%),radial-gradient(50% 35% at 96% 30%,var(--g2,rgba(200,110,255,.4)),transparent 70%),radial-gradient(60% 40% at 20% 100%,var(--g3,rgba(70,210,255,.38)),transparent 70%),var(--bg)}
+body::after{content:"";position:fixed;inset:0;z-index:-1;transform:translateZ(0);background:radial-gradient(55% 35% at 8% 6%,var(--g1,rgba(37,99,235,.5)),transparent 70%),radial-gradient(50% 35% at 96% 30%,var(--g2,rgba(59,130,246,.35)),transparent 70%),radial-gradient(60% 40% at 20% 100%,var(--g3,rgba(14,165,233,.3)),transparent 70%),var(--bg)}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:10}
 button,input,select{font:inherit;color:inherit}button{cursor:pointer;touch-action:manipulation;user-select:none;-webkit-user-select:none;transition:transform .12s,opacity .12s}button:active:not(:disabled){transform:scale(.96)}
 .ic{flex:none;display:block}
@@ -34,7 +34,7 @@ h2{margin:4px 0}.mu{color:var(--mu);margin:0}
 .card{display:flex;align-items:center;gap:12px;text-align:left;background:var(--gl);border:1px solid var(--st);box-shadow:var(--hi),var(--sh);border-radius:24px;padding:14px;width:100%;border-width:1px}
 .card:disabled{opacity:.55}.card div{flex:1;min-width:0}.card small{display:block;color:var(--mu)}.tt{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .tl{width:46px;height:46px;border-radius:15px;display:grid;place-items:center;color:#fff;font-weight:700;font-size:20px;flex:none;background:linear-gradient(135deg,var(--ac),var(--ac2));box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 4px 12px color-mix(in srgb,var(--ac) 30%,transparent)}
-.tot{background:linear-gradient(135deg,rgba(125,140,255,.3),var(--gl))}
+.tot{background:linear-gradient(135deg,rgba(37,99,235,.35),var(--gl))}
 .bar{display:block;height:7px;border-radius:4px;background:var(--bd);margin-top:7px;overflow:hidden}.bar u{display:block;height:100%;border-radius:4px;background:linear-gradient(90deg,var(--ac),var(--ac2));transition:width .3s}
 .btn{min-height:50px;border:0;border-radius:25px;background:linear-gradient(135deg,var(--ac),var(--ac2));color:#fff;font-weight:600;padding:0 20px;width:100%;display:inline-flex;align-items:center;justify-content:center;gap:8px;box-shadow:inset 0 1px 0 rgba(255,255,255,.45),0 8px 20px color-mix(in srgb,var(--ac) 35%,transparent)}
 .btn.sec{background:var(--gl);color:var(--tx);border:1px solid var(--st);box-shadow:var(--hi);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px)}.btn:disabled{opacity:.5;box-shadow:none}
@@ -51,7 +51,7 @@ h2{margin:4px 0}.mu{color:var(--mu);margin:0}
 .opt:disabled:not(.ok):not(.bad){opacity:.5}
 .rd{width:26px;height:26px;border-radius:50%;border:2px solid var(--bd);flex:none;display:grid;place-items:center;color:#fff}.opt.ok .rd{background:#10b981;border-color:#10b981}.opt.bad .rd{background:#f43f5e;border-color:#f43f5e}
 .pr{display:flex;gap:6px;align-items:center}.empty{text-align:center;padding:40px 0;color:var(--mu)}.empty h2{color:var(--tx)}.empty svg{margin:0 auto 10px}
-.due{background:linear-gradient(135deg,#fb923c,#e11d48);color:#fff;border:0;justify-content:space-between}.due small{color:#fff}
+.due{background:linear-gradient(135deg,#1D4ED8,#0EA5E9);color:#fff;border:0;justify-content:space-between}.due small{color:#fff}
 .okt{color:var(--ok);margin:0}.badt{color:var(--bad);margin:0}
 .top{display:flex;gap:10px;align-items:center}.pill{flex:1;height:44px;margin:0;border-radius:22px;position:relative}
 .pill u{position:absolute;inset:0 auto 0 0;min-width:44px;opacity:.55}.pill em{position:relative;display:block;text-align:center;line-height:42px;font-style:normal;font-weight:600;color:var(--mu)}
@@ -127,6 +127,10 @@ header{gap:2px;padding:3px 6px}
 .cal{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;text-align:center}.cal small{padding:4px 0}.dc{aspect-ratio:1;border-radius:12px;display:grid;place-items:center;font-size:13px;color:var(--mu);background:var(--bd)}.dc.d1{background:color-mix(in srgb,var(--ac) 25%,transparent);color:var(--tx)}.dc.d2{background:color-mix(in srgb,var(--ac) 45%,transparent);color:var(--tx)}.dc.d3{background:color-mix(in srgb,var(--ac) 75%,transparent);color:#fff}.dc.today{outline:2px solid var(--ac)}.dc.fut{opacity:.4}
 .sgrid,.agrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.stile,.ach{display:flex;flex-direction:column;gap:4px;padding:14px;border-radius:20px;background:var(--gl);border:1px solid var(--st)}.stile b{font-size:26px}.stile small{color:var(--mu)}.ach{opacity:.65}.ach.on{opacity:1;border-color:var(--ac)}.ae{font-size:30px}
 .tb{width:min(94vw,440px)}.tb button{min-width:0;padding-left:2px;padding-right:2px;font-size:10.5px}
+.av{overflow:hidden}.av img{width:100%;height:100%;border-radius:50%;object-fit:cover;display:block}
+.cropv{position:relative;width:280px;height:280px;margin:0 auto;touch-action:none;border-radius:16px;overflow:hidden;background:#000}.cropv canvas{width:280px;height:280px;display:block}.cropm{position:absolute;inset:0;border-radius:50%;box-shadow:0 0 0 400px rgba(0,0,0,.55);pointer-events:none;border:2px solid #fff}
+.idrow{display:flex;align-items:center;gap:6px;padding:0 14px;border-radius:16px;border:1px solid var(--st);background:var(--gl2)}.idrow span{color:var(--mu);font-size:20px}.idrow input{flex:1;min-width:0;background:none;border:0;color:var(--tx);font:inherit;font-size:20px;padding:12px 0;outline:0}
+.srow input.nm{display:block;width:100%;padding:2px 0 0;font-weight:500;color:var(--mu);-webkit-appearance:none;appearance:none}
 </style>
 </head>
 <body>
@@ -136,8 +140,8 @@ header{gap:2px;padding:3px 6px}
    url — Project URL, key — anon public key (НЕ service_role). После этого поля ввода в приложении исчезнут. */
 const CFG={url:"https://utoliqtssyxmulajvnfr.supabase.co",key:"sb_publishable_2rxY4P67Ajn7QHmRo0RTGQ_5ROtvegN"};
 const $=s=>document.querySelector(s),DAY=864e5,IV=[0,1,3,7,30,90,180,365];
-const GR=["linear-gradient(135deg,#5560ff,#a45cff)","linear-gradient(135deg,#10b981,#84cc16)","linear-gradient(135deg,#f97316,#ec4899)","linear-gradient(135deg,#0ea5e9,#6366f1)"];
-const TOP=["Путешествия","Еда","Работа","Здоровье","Технологии","Семья","Спорт","Природа","Покупки","Учёба","Кино и музыка","Город"],SC=["Кафе","Аэропорт","Знакомство","Работа","Магазин","Отель","У врача","Свободный разговор"];
+const GR=["linear-gradient(135deg,#2563EB,#3B82F6)","linear-gradient(135deg,#1D4ED8,#0EA5E9)","linear-gradient(135deg,#1E3A8A,#2563EB)","linear-gradient(135deg,#0EA5E9,#2563EB)"];
+const SC=["Кафе","Аэропорт","Знакомство","Работа","Магазин","Отель","У врача","Свободный разговор"];
 const EX="apple — яблоко\nto run — бежать, управлять\n2. house; дом\nbook\tкнига\nwell-known - известный\n3) water = вода\ncat | кошка\nsun: солнце\ntree, дерево\ncloud";
 const P={user:'<circle cx="12" cy="8" r="4"/><path d="M4 20c1-4 4-6 8-6s7 2 8 6"/>',cards:'<rect x="3" y="7" width="14" height="13" rx="3"/><path d="M7 4h11a3 3 0 0 1 3 3v9"/>',book:'<path d="M12 6.5C10 5 7 4.6 4 5v13c3-.4 6 0 8 1.5 2-1.5 5-1.9 8-1.5V5c-3-.4-6 0-8 1.5zM12 6.5v13"/>',chat:'<path d="M5 4.5h14a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-7l-5 3.5v-3.5H5a2 2 0 0 1-2-2v-9a2 2 0 0 1 2-2z"/><path d="M12 8v5M9.5 10.5h5"/>',vol:'<path d="M4 9v6h4l5 4V5L8 9H4zM16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/>',lang:'<path d="M4 5h9M8.5 3v2M6 5c.5 4 3 7 6.5 8M12 5c-.5 4-3 7-7 9M13 20l4-9 4 9M14.5 17h5"/>',back:'<path d="M15 5l-7 7 7 7"/>',close:'<path d="M6 6l12 12M18 6L6 18"/>',check:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',flame:'<path d="M12 3c1 3 5 5 5 10a5 5 0 0 1-10 0c0-2 1-3 2-4 0 2 1 3 2 3 0-3-1-5 1-9z"/>',star:'<path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.1 1 5.9L12 16.9l-5.2 2.8 1-5.9-4.3-4.1 5.9-.8z"/>',moon:'<path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z"/>',send:'<path d="M4 12l16-8-6 16-3-7-7-1z"/>',plus:'<path d="M12 5v14M5 12h14"/>',refresh:'<path d="M20 12a8 8 0 1 1-2.4-5.7M20 4v4h-4"/>',lock:'<rect x="5" y="11" width="14" height="9" rx="2.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',play:'<path d="M8 5l11 7-11 7z"/>',swap:'<path d="M7 7h12l-3-3M17 17H5l3 3"/>',file:'<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8zM14 3v5h5M12 17v-6M9.5 13.5L12 11l2.5 2.5"/>',pen:'<path d="M4 20l1-4L16.5 4.5a2 2 0 0 1 3 3L8 19zM14 7l3 3"/>',list:'<path d="M4 6.5L5.5 8 8 5M4 12.5L5.5 14 8 11M4 18.5L5.5 20 8 17M11 7h9M11 13h9M11 19h9"/>',spark:'<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8zM19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8z"/>',cloud:'<path d="M7 18a4 4 0 0 1-.6-8A6 6 0 0 1 18 9.6 4.2 4.2 0 0 1 17 18z"/>',target:'<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r=".8"/>',bulb:'<path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.6 10.8c.6.5 1 1.2 1 2.2h5.2c0-1 .4-1.7 1-2.2A6 6 0 0 0 12 3z"/>',alert:'<path d="M12 4l9 16H3zM12 10v4M12 17.2v.3"/>',gear:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>'};
 const ic=(n,s=22)=>`<svg class="ic" width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${P[n]}</svg>`;
@@ -148,7 +152,7 @@ let svT=0;const flush=()=>{try{localStorage.setItem("wf1",JSON.stringify(S))}cat
 let pt=0;const save=()=>{S.updated=Date.now();clearTimeout(svT);svT=setTimeout(flush,600);if(sbOn()){clearTimeout(pt);pt=setTimeout(push,15000)}};
 addEventListener("pagehide",flush);document.addEventListener("visibilitychange",()=>{if(document.hidden){flush();if(sbOn()&&pt){clearTimeout(pt);pt=0;push()}}else if(sbOn()&&["home","course","sync"].includes(V.v))pull().then(c=>{if(c)R()})});
 const PALS={
-indigo:{n:"Индиго",sw:["#070918","#3a3f8f","#5560ff","#a45cff"]},
+indigo:{n:"Чёрно-синяя",sw:["#090D16","#131B2E","#2563EB","#3B82F6"]},
 ocean:{n:"Океан",sw:["#0B132B","#3A506B","#5BC0DE","#D97706"],d:"#0B132B",m:"#1C2541",l:"#3A506B",a:"#3F8FB8",b:"#D97706",tx:"#EAF3FA",lb:"#E9F0F7",g:["#F28C28","#5BC0DE","#5BC0DE"]},
 forest:{n:"Лес",sw:["#0F1F17","#3E5A3F","#6B7F67","#C7CBB8"],d:"#0F1F17",m:"#1E3A2E",l:"#3E5A3F",a:"#6E9457",b:"#3E5A3F",tx:"#EDF1E3",lb:"#ECEFE3",g:["#C7D45A","#C7D45A","#6B7F67"]},
 coffee:{n:"Кофе",sw:["#1A120E","#6B4A2E","#A88462","#D5C4AE"],d:"#1A120E",m:"#3A2418",l:"#6B4A2E",a:"#A07650",b:"#6B4A2E",tx:"#F4EBE0",lb:"#F3EBE2",g:["#E39A5A","#E39A5A","#A88462"]},
@@ -199,11 +203,11 @@ const syErr=e=>e.name=="TypeError"?"Запрос заблокирован: ст�
 async function rpc(fn,body){const r=await fetch(SB.url.replace(/\/+$/,"")+"/rest/v1/rpc/"+fn,{method:"POST",headers:{apikey:SB.key,"Content-Type":"application/json"},body:JSON.stringify(body)});if(!r.ok)throw new Error(r.status);const t=await r.text();return t?JSON.parse(t):null}
 const hm=()=>new Date().toLocaleTimeString("ru",{hour:"2-digit",minute:"2-digit"});
 async function push(){if(!sbOn())return;try{setSt("Отправка…");await dbPut();setSt("Синхронизировано в "+hm())}catch(e){setSt(syErr(e))}}
-async function pull(){if(!sbOn())return false;try{setSt("Загрузка…");const d=await dbGet();if(d&&(d.updated||0)>(S.updated||0)){S=d;flush();setSt("Загружено в "+hm());return true}setSt("Данные актуальны, "+hm())}catch(e){setSt(syErr(e))}return false}
+async function pull(){if(!sbOn())return false;try{setSt("Загрузка…");const d=await dbGet();if(d&&(d.updated||0)>(S.updated||0)){S=d;fixStars(1);flush();setSt("Загружено в "+hm());return true}setSt("Данные актуальны, "+hm())}catch(e){setSt(syErr(e))}return false}
 async function connect(){if(!sbOn())return toast("Заполните URL, ключ и код (не короче 12 символов)");sbSave();
   try{setSt("Проверка…");const d=await dbGet(),both=!!(d&&d.words&&d.words.length&&S.words.length&&d.updated!=S.updated);
     const takeRemote=d&&(both?confirm("На этом устройстве и в аккаунте разные данные.\n\nOK — загрузить данные из аккаунта (локальные будут заменены).\nОтмена — оставить локальные и перезаписать аккаунт."):(d.updated||0)>(S.updated||0));
-    if(takeRemote){S=d;flush();th();setSt("Данные загружены с сервера в "+hm())}
+    if(takeRemote){S=d;fixStars(1);flush();th();setSt("Данные загружены с сервера в "+hm())}
     else{S.updated=S.updated||Date.now();await push()}}
   catch(e){setSt(syErr(e))}
   R()}
@@ -228,7 +232,26 @@ create policy pub_sel on wf_pub for select using (is_public or auth.uid()=owner)
 create policy pub_ins on wf_pub for insert with check (auth.uid()=owner);
 create policy pub_upd on wf_pub for update using (auth.uid()=owner) with check (auth.uid()=owner);
 create policy pub_del on wf_pub for delete using (auth.uid()=owner);
-create index if not exists wf_pub_i on wf_pub(is_public, updated desc);`;
+create index if not exists wf_pub_i on wf_pub(is_public, updated desc);
+
+-- Публичные книги
+create table if not exists wf_pub_books(id uuid primary key default gen_random_uuid(), owner uuid not null references auth.users(id) on delete cascade, title text not null, lang text, ls jsonb not null, cnt int default 0, author text, is_public boolean not null default false, updated bigint not null default 0);
+alter table wf_pub_books enable row level security;
+drop policy if exists pubb_sel on wf_pub_books; drop policy if exists pubb_ins on wf_pub_books; drop policy if exists pubb_upd on wf_pub_books; drop policy if exists pubb_del on wf_pub_books;
+create policy pubb_sel on wf_pub_books for select using (is_public or auth.uid()=owner);
+create policy pubb_ins on wf_pub_books for insert with check (auth.uid()=owner);
+create policy pubb_upd on wf_pub_books for update using (auth.uid()=owner) with check (auth.uid()=owner);
+create policy pubb_del on wf_pub_books for delete using (auth.uid()=owner);
+create index if not exists wf_pub_books_i on wf_pub_books(is_public, updated desc);
+
+-- Уникальные ID пользователей
+create table if not exists wf_ids(id text primary key check (id ~ '^[a-z][a-z0-9_]{2,19}$'), uid uuid not null unique references auth.users(id) on delete cascade, created_at timestamptz default now());
+alter table wf_ids enable row level security;
+drop policy if exists ids_sel on wf_ids; drop policy if exists ids_ins on wf_ids; drop policy if exists ids_upd on wf_ids;
+create policy ids_sel on wf_ids for select using (true);
+create policy ids_ins on wf_ids for insert with check (auth.uid()=uid);
+create policy ids_upd on wf_ids for update using (auth.uid()=uid) with check (auth.uid()=uid);
+`;
 const base=()=>SB.url.replace(/\/+$/,"");
 async function ax(path,body,tk){const r=await fetch(base()+"/auth/v1/"+path,{method:body?"POST":"GET",headers:Object.assign({apikey:SB.key,"Content-Type":"application/json"},tk?{Authorization:"Bearer "+tk}:{}),body:body?JSON.stringify(body):undefined});const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error_description||j.msg||j.message||String(r.status));return j}
 const axErr=e=>e.name=="TypeError"?syErr(e):/Invalid login/i.test(e.message)?"Неверный email или пароль":/not confirmed/i.test(e.message)?"Подтвердите почту по ссылке из письма":/already|registered/i.test(e.message)?"Этот email уже зарегистрирован — нажмите «Войти»":/password/i.test(e.message)?"Пароль слишком короткий (минимум 6 символов)":e.message;
@@ -372,7 +395,7 @@ function commitRun(t){if(!t||!t.words)return;t.ap=t.ap||new Set();const now=Date
   if(!S.sf){S.words.forEach(w=>{if(w.st>=5&&!w.star)w.star=1});S.sf=1}
   t.words.forEach(w=>{if(t.ap.has(w.id)||!(t.done.has(w.id)||t.err.has(w.id)))return;t.ap.add(w.id);ch=1;
     if(t.err.has(w.id)){w.st=Math.max(1,w.st-1);w.due=now+DAY;return}
-    const b=todayWd();dayWd(1);if(b<goal()&&b+1>=goal())t.goalHit=1;
+    dayWd(1);{const h=S.hist[dk()];if(!h.gs&&todayWd()>=goal()){h.gs=1;t.goalHit=1;t.xp++;gain(1)}}
     if(w.st==0){t.newW++;w.st=1;w.due=now+IV[1]*DAY}
     else{t.repW++;if(w.due<=now||(t.key&&t.key.rev)){w.st=Math.min(7,w.st+1);w.due=now+IV[w.st]*DAY}}
     if(w.st>=5&&!w.star){w.star=1;t.xp++;gain(1,wl(w))}});
@@ -551,12 +574,6 @@ function rdSheet(b,l,ar){if(!V.sh)return"";let h;
   if(V.sh=="ls")h=`<b>Уроки</b><div class="lst">${b.ls.map((x,i)=>`<button class="card g ${i==l?"on":""}" data-a="rlg" data-i="${i}"><span class="mu">${i+1}</span><b class="tt" dir="auto" style="flex:1">${esc(x.t)}</b>${(b.bm||[]).includes(i)?"🔖":""}${(b.dn||[]).includes(i)?"✓":""}</button>`).join("")}</div>`;
   else h=`<b>Настройки чтения</b><div class="row"><button class="chip" data-a="rfs" data-k="-2">A−</button><button class="chip" data-a="rfs" data-k="2">A+</button></div>${ar?`<button class="chip ${S.hk===false?"":"on"}" data-a="rhk">Огласовка: ${S.hk===false?"скрыта":"показана"}</button>`:""}<button class="chip ${S.rtr?"on":""}" data-a="rtr">Перевод под всеми предложениями: ${S.rtr?"вкл":"выкл"}</button>`;
   return`<div class="bsh-bg" data-a="rsx"></div><div class="bsh">${h}<button class="btn" data-a="rsx">Готово</button></div>`}
-async function genTopic(topic){
-  const L=S.rl||"английский",kw=kwList();V={v:"rd",ld:topic};const v=V;R();const sm=await getSm();let x=null;
-  if(sm)try{const j=jp((await sm("Напиши короткий связный текст из 6 предложений на языке: "+L+", уровень "+(S.lv||"A2")+", тема: "+topic+"."+(kw.length?" По возможности используй слова: "+kw.join(", ")+".":"")+hk(L)+' Для 1–3 предложений добавь краткое пояснение на русском (грамматика или трудное место) в поле "n", у остальных "n" пустое. Верни ТОЛЬКО JSON без пояснений: {"t":"заголовок","tt":"заголовок по-русски","s":[{"a":"предложение","t":"перевод на русский","n":""}]}',{modelTier:"quick"})).text);if(Array.isArray(j.s)&&j.s.length)x=j}catch(e){toast(AIE||"Сервер ИИ недоступен — создан авто-текст")}
-  if(!x){const m=mockRead(topic,L);x={t:m.title,tt:m.titleT,s:m.s.map(e=>({a:e.s,t:e.t,n:""}))}}
-  let b=BK().find(k=>k.auto&&k.lang==L);if(!b){b={id:uid(),title:"Мои тексты · "+cap(L),lang:L,ls:[],auto:1,p:{l:0},bm:[],dn:[]};BK().push(b)}
-  b.ls.push(x);b.p.l=b.ls.length-1;save();if(V===v){V={v:"rd",bid:b.id,l:b.p.l};R()}}
 const kwh=()=>V.kw.map(w=>`<span class="tag ${V.used.has(w.toLowerCase())?"on":""}">${esc(w)}</span>`).join("");
 const msgs=()=>V.msgs.map((m,i)=>m.me?`<div class="b me">${esc(m.s)}${m.fix?`<small class="fx">${esc(m.fix)}</small>`:""}</div>`:`<div class="b"><p dir="auto">${tok(m.s)}</p>${m.sh?`<small>↳ ${esc(m.tr)}</small>`:""}<div class="act"><button class="x" data-a="mtr" data-i="${i}" aria-label="Перевод">${ic("lang",18)}</button><button class="x" data-a="msay" data-i="${i}" aria-label="Озвучить">${ic("vol",18)}</button></div></div>`).join("")+(V.busy?`<div class="b"><i class="dots"></i></div>`:"");
 const RC=()=>{if(V.v!="chat"||!V.msgs||!$("#msgs"))return;$("#msgs").innerHTML=msgs();$("#kw").innerHTML=kwh();scrollTo({top:document.body.scrollHeight})};
@@ -665,7 +682,7 @@ async function boxBuild(){const v=SBN,tk=++v.tk,rl=S.rl||"английский";
   rb()}
 const hid=async s=>{const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(s));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("").slice(0,32)};
 const repLangs=()=>[...new Set(["английский","арабский",...S.courses.map(cl),...Object.values(S.hist||{}).flatMap(h=>Object.keys(h.l||{}))])];
-const lxp=l=>l=="all"?S.xp|0:Object.values(S.hist||{}).reduce((a,h)=>a+(((h.l||{})[l]||{}).xp||0),0);
+const lxp=l=>l=="all"?S.xp|0:S.words.filter(w=>w.star&&wl(w)==l).length;
 const parseBrdName=(raw,h)=>{
   const p=String(raw||"").split("｜");
   let name=(p[0]||"").trim();
@@ -688,7 +705,6 @@ const weekRep=l=>{const L=lastDays(7,l),W=l=="all"?S.words:S.words.filter(w=>wl(
 const lchips=(act,cur)=>`<div class="lgs">${["all",...(act=="bdl"?LANGS:repLangs())].map(k=>`<button class="chip ${k==cur?"on":""}" data-a="${act}" data-k="${k}">${k=="all"?"Всё":cap(k)}</button>`).join("")}</div>`;
 /* ===== Профиль: уровень, ID, аватары, страны, достижения, звук/вибрация ===== */
 const need=L=>25*L*(L-1),lvOf=x=>{let L=1;while(x>=need(L+1))L++;return L};
-const gid=()=>S.gid||(S.gid="guest_"+(100000+Math.floor(Math.random()*900000)));
 const AVS=["🦊","🐼","🦁","🐯","🐨","🐸","🦉","🐙","🦄","🐲","🐧","🦋","🌟","🚀","📚","🎯"];
 const CTY=[["🇷🇺","Россия"],["🇰🇿","Казахстан"],["🇺🇿","Узбекистан"],["🇺🇦","Украина"],["🇧🇾","Беларусь"],["🇦🇿","Азербайджан"],["🇬🇪","Грузия"],["🇦🇲","Армения"],["🇰🇬","Кыргызстан"],["🇹🇯","Таджикистан"],["🇹🇲","Туркменистан"],["🇹🇷","Турция"],["🇦🇪","ОАЭ"],["🇸🇦","Саудовская Аравия"],["🇪🇬","Египет"],["🇲🇦","Марокко"],["🇩🇪","Германия"],["🇫🇷","Франция"],["🇪🇸","Испания"],["🇮🇹","Италия"],["🇬🇧","Великобритания"],["🇺🇸","США"],["🇨🇦","Канада"],["🇵🇱","Польша"],["🇨🇳","Китай"],["🌍","Другая"]];
 const actDay=h=>!!h&&((h.wd!=null?h.wd:h.xp||0)>0||(h.rv||0)>0);
@@ -704,6 +720,45 @@ const profAct=()=>{const o=V.pm||0,n=new Date(),d0=new Date(n.getFullYear(),n.ge
 const profStat=()=>{const r=weekRep("all"),W=S.words,hs=Object.values(S.hist||{}),mx=Math.max(1,...r.L.map(x=>x.xp)),DN=["Вс","Пн","Вт","Ср","Чт","Пт","Сб"],T=(n,t)=>`<div class="stile"><b>${n}</b><small>${t}</small></div>`;
   return`<div class="sgrid">${T(W.filter(w=>w.st>0).length+" / "+W.length,"выучено слов")}${T(W.filter(w=>w.st>=7).length,"освоено полностью")}${T(hs.reduce((a,h)=>a+(h.rv||0),0),"повторений всего")}${T(Math.max(bestStreak(),strk()),"лучшая серия")}${T(hs.filter(actDay).length,"активных дней")}${T(S.courses.length,"курсов")}</div><div class="card g col"><b>Звёздочки за 7 дней</b><div class="chart">${r.L.map(x=>`<span><small class="mu">${x.xp||""}</small><i class="cb" style="height:${x.xp?Math.max(8,Math.round(x.xp/mx*90)):4}px;${x.xp?"":"opacity:.25"}"></i><small class="mu">${DN[x.d.getDay()]}</small></span>`).join("")}</div></div><button class="btn sec" data-a="rep">Подробный недельный отчёт</button>`};
 const profAch=()=>{const A=ACH(),n=A.filter(a=>a[2]>=a[3]).length;return`<p class="mu">Получено: ${n} из ${A.length}</p><div class="agrid">${A.map(([e,t,v,g])=>`<div class="ach ${v>=g?"on":""}"><span class="ae">${e}</span><b>${t}</b><i class="bar"><u style="width:${Math.min(100,Math.round(v/g*100))}%"></u></i><small class="mu">${Math.min(v,g)} / ${g}</small></div>`).join("")}</div>`};
+/* ===== Звёзды: баланс считается из реальных данных ===== */
+const calcStars=()=>S.words.filter(w=>w.star).length+Object.values(S.hist||{}).filter(h=>h&&h.gs).length;
+function fixStars(ns){if(S.sv==2)return;S.words.forEach(w=>{if(w.st>=5)w.star=1});
+  Object.values(S.hist||{}).forEach(h=>{if(h.wd==null)h.wd=h.xp||0;h.xp=0;if(h.l)Object.values(h.l).forEach(g=>{g.xp=0})});
+  S.xp=calcStars();S.sv=2;S.sf=1;if(!ns)save()}
+/* ===== Аватар: фото из галереи с обрезкой ===== */
+const avHtml=()=>S.avi?`<img src="${S.avi}" alt="">`:(S.av||"🙂");
+let AVC={img:null,ox:0,oy:0,z:1},CPD=null;
+function cropDraw(){const c=document.getElementById("cropc"),i=AVC.img;if(!c||!i)return;const W=280,b=Math.max(W/i.width,W/i.height)*AVC.z,w=i.width*b,h=i.height*b;AVC.ox=Math.min(0,Math.max(W-w,AVC.ox));AVC.oy=Math.min(0,Math.max(W-h,AVC.oy));const x=c.getContext("2d");x.clearRect(0,0,W,W);x.drawImage(i,AVC.ox,AVC.oy,w,h)}
+function cropSave(){const i=AVC.img;if(!i)return;const o=document.createElement("canvas");o.width=o.height=256;const f=256/280,b=Math.max(280/i.width,280/i.height)*AVC.z;o.getContext("2d").drawImage(i,AVC.ox*f,AVC.oy*f,i.width*b*f,i.height*b*f);S.avi=o.toDataURL("image/jpeg",.85);S.av="";AVC.img=null}
+function avLoad(f){if(!f)return;if(!/^image\//.test(f.type))return toast("Выберите изображение");if(f.size>20e6)return toast("Файл больше 20 МБ");
+  const im=new Image();im.onload=()=>{const b=Math.max(280/im.width,280/im.height);AVC={img:im,ox:(280-im.width*b)/2,oy:(280-im.height*b)/2,z:1};if(V.v!="set")V={v:"set"};V.sh="crop";R();cropDraw()};im.onerror=()=>toast("Не удалось открыть фото");im.src=URL.createObjectURL(f)}
+document.addEventListener("pointerdown",e=>{if(AVC.img&&e.target.closest&&e.target.closest("#cropv"))CPD={x:e.clientX,y:e.clientY,ox:AVC.ox,oy:AVC.oy}});
+document.addEventListener("pointermove",e=>{if(!CPD)return;AVC.ox=CPD.ox+(e.clientX-CPD.x);AVC.oy=CPD.oy+(e.clientY-CPD.y);cropDraw();e.preventDefault()},{passive:false});
+document.addEventListener("pointerup",()=>{CPD=null});document.addEventListener("pointercancel",()=>{CPD=null});
+/* ===== Свой уникальный ID (проверка и закрепление в Supabase, таблица wf_ids) ===== */
+const IDSQL=`-- Уникальные ID пользователей
+create table if not exists wf_ids(id text primary key check (id ~ '^[a-z][a-z0-9_]{2,19}$'), uid uuid not null unique references auth.users(id) on delete cascade, created_at timestamptz default now());
+alter table wf_ids enable row level security;
+drop policy if exists ids_sel on wf_ids; drop policy if exists ids_ins on wf_ids; drop policy if exists ids_upd on wf_ids;
+create policy ids_sel on wf_ids for select using (true);
+create policy ids_ins on wf_ids for insert with check (auth.uid()=uid);
+create policy ids_upd on wf_ids for update using (auth.uid()=uid) with check (auth.uid()=uid);`,IDRE=/^[a-z][a-z0-9_]{2,19}$/,IDBAD=/^(admin|support|root|system|knapo|moderator|official|null|undefined)$/;
+let IDS={h:"",st:""},IDT=0;
+const IDM={"":"",bad:"3–20 символов: латиница, цифры и «_», первой должна быть буква",rsv:"Этот ID зарезервирован",mine:"Это ваш текущий ID",auth:"Войдите в аккаунт, чтобы закрепить ID за собой",chk:"Проверяю…",free:"✅ ID свободен",taken:"❌ Этот ID уже занят, придумайте другой",table:"В вашем Supabase ещё нет таблицы ID. Скопируйте SQL кнопкой ниже и выполните его в SQL Editor.",err:"Не удалось проверить: нет связи с сервером"};
+function idUi(st){IDS.st=st;const e=document.getElementById("idst");if(e)e.textContent=IDM[st]||"";const b=document.getElementById("idsb");if(b)b.disabled=st!="free"}
+async function idReq(path,o){o=o||{};if(!(SB&&SB.session))throw Object.assign(new Error("auth"),{k:"auth"});const tk=await authTok();
+  const r=await fetch(base()+"/rest/v1/"+path,{method:o.m||"GET",body:o.b,headers:{apikey:SB.key,Authorization:"Bearer "+tk,"Content-Type":"application/json"}});
+  if(!r.ok){let m="";try{m=(await r.json()).message||""}catch(e){}throw Object.assign(new Error(m||String(r.status)),{k:r.status==409||/duplicate|unique/i.test(m)?"taken":r.status==404||/wf_ids|relation|schema cache/.test(m)?"table":r.status==401||r.status==403?"auth":"err"})}
+  return r.status==204?null:r.json()}
+const idFree=async h=>{const a=await idReq("wf_ids?select=uid&id=eq."+h);return!a.length||a[0].uid==SB.session.id};
+async function idClaim(h){const me=SB.session.id,a=await idReq("wf_ids?select=id&uid=eq."+me);if(a.length)await idReq("wf_ids?uid=eq."+me,{m:"PATCH",b:JSON.stringify({id:h})});else await idReq("wf_ids",{m:"POST",b:JSON.stringify({id:h,uid:me})})}
+function idInput(t){const h=t.value.toLowerCase().replace(/[^a-z0-9_]/g,"").slice(0,20);if(t.value!==h)t.value=h;IDS.h=h;clearTimeout(IDT);
+  if(!h)return idUi("");if(!IDRE.test(h))return idUi("bad");if(IDBAD.test(h))return idUi("rsv");if(h==S.hid)return idUi("mine");if(!(SB&&SB.session))return idUi("auth");
+  idUi("chk");IDT=setTimeout(async()=>{try{const f=await idFree(h);if(IDS.h==h)idUi(f?"free":"taken")}catch(e){if(IDS.h==h)idUi(e.k=="table"?"table":e.k=="auth"?"auth":"err")}},450)}
+async function idSave(){const h=IDS.h;if(IDS.st!="free"||!IDRE.test(h))return;idUi("chk");try{await idClaim(h);S.hid=h;save();V.sh=null;toast("ID @"+h+" закреплён за вами");R()}catch(e){idUi(e.k=="taken"?"taken":e.k=="table"?"table":"err")}}
+function idLoad(){if(!(SB&&SB.session))return;idReq("wf_ids?select=id&uid=eq."+SB.session.id).then(a=>{if(a[0]&&a[0].id!=S.hid){S.hid=a[0].id;IDS.h=S.hid;save();if(V.sh=="id")R()}}).catch(()=>{})}
+const cp=(t,m)=>{try{navigator.clipboard.writeText(t).then(()=>toast(m),()=>toast("Не удалось скопировать"))}catch(e){toast("Не удалось скопировать")}};
+const rsOk=v=>{v=(v||"").trim();return v.toUpperCase()=="УДАЛИТЬ"||!!(S.hid&&v.replace(/^@/,"").toLowerCase()==S.hid)};
 const head=()=>`<header class="g">${V.v!="home"?`<button class="x" data-a="${V.v=="chat"&&V.back||V.v=="editc"||V.v=="lesson"?"course":V.v=="sync"?"set":"home"}" data-id="${V.back||(V.v=="editc"||V.v=="lesson"?V.id:"")}" aria-label="Назад">${ic("back")}</button>`:""}<div class="brand" data-a="home" style="cursor:pointer">${knapoLogo(28)}<div class="brand-txt"><b>KNΛPO</b><small>Words</small></div></div><button class="st fl" data-a="xpinfo" aria-label="Серия дней">${ic("flame",16)}${strk()}</button><button class="st sr" data-a="xpinfo" aria-label="Звёздочки за слова">${ic("star",16)}${S.xp}</button><button class="x" data-a="set" aria-label="Настройки">${ic("gear",20)}</button></header>`;
 const tabs=()=>`<nav class="tb g">${[["w","cards","Заучивание"],["read","book","Чтение"],["ai","chat","Диалог ИИ"],["box","target","Песочница"],["prof","user","Профиль"]].map(([k,i,n])=>`<button class="${(S.tab||"w")==k?"on":""}" data-a="tab" data-k="${k}">${ic(i,24)}<span>${n}</span></button>`).join("")}</nav>`;
 const langs=()=>{const rl=S.rl||"английский";return`<div class="lgs">${LANGS.map(l=>`<button class="chip ${l==rl?"on":""}" data-a="lang" data-k="${l}">${cap(l)}</button>`).join("")}</div>`};
@@ -730,10 +785,12 @@ homeW:()=>{const d=due().length,tp=pct(S.words),lrn=learnedCnt("all");return(OWN
   (S.courses.length?S.courses.map(c=>{const cw=S.words.filter(w=>w.c==c.id),n=cw.length,clrn=cw.filter(w=>w.st>0).length,p=prog(c);return`<button class="card" data-a="course" data-id="${c.id}"><span class="tl" style="background:${c.g||GR[0]}">${ic("book",24)}</span><div><b class="tt">${esc(c.title)}</b><small>выучено ${clrn} из ${n} сл. · ${Math.ceil(n/c.per)} ур. · ${p}%</small><i class="bar"><u style="width:${p}%"></u></i></div></button>`}).join(""):`<div class="empty">${knapoLogo(60)}<p>Пока нет курсов.<br>Загрузите файл со словами — курс создастся сам.</p></div>`)+
   `<div class="row"><button class="card" style="flex:1;flex-direction:column;align-items:flex-start" data-a="rep"><b>Недельный отчёт</b><small>⭐ и слова</small></button><button class="card" style="flex:1;flex-direction:column;align-items:flex-start" data-a="board"><b>Рейтинг</b><small>топ игроков</small></button></div><button class="btn sec" data-a="find">${ic("book",20)} Найти курсы других пользователей</button><button class="btn" data-a="import">${ic("plus",20)} Создать курс из файла</button>`},
 homeP:()=>{const nm=S.nick||"Ученик",xp=S.xp,L=lvOf(xp),a=need(L),b=need(L+1),pt=S.pt||"act",ls=S.courses.reduce((n,c)=>n+(c.done||[]).length,0);
-  return`<div class="row" style="align-items:center"><h2 style="flex:1">Профиль</h2><button class="x g" data-a="set" aria-label="Настройки">${ic("gear",22)}</button></div><div class="card g col pcard"><div class="prow"><button class="av" data-a="set" aria-label="Изменить профиль">${S.av||"🙂"}</button><div class="pn"><b dir="auto">${esc(nm)}</b><small>@${gid()}</small></div><span class="lvb">★ Ур. ${L}</span></div><div class="plv"><small>СЛЕДУЮЩИЙ УРОВЕНЬ</small><small>${xp-a}/${b-a} ⭐</small></div><b style="font-size:20px">${b-xp} ⭐ осталось</b><i class="bar"><u style="width:${Math.round((xp-a)/(b-a)*100)}%"></u></i><div class="pst"><div><span>🔥</span><small>Серия</small><b>${strk()}</b></div><div><span>🎓</span><small>Уроки</small><b>${ls}</b></div><div><span>⭐</span><small>Всего</small><b>${xp}</b></div></div><button class="prk" data-a="board"><span class="si">🏆</span><div><b>Рейтинг</b><small>Топ игроков</small></div><span class="chv">›</span></button></div><div class="seg">${[["act","Активность"],["stat","Статистика"],["ach","Достижения"]].map(([k,n])=>`<button class="${pt==k?"on":""}" data-a="ppt" data-k="${k}">${n}</button>`).join("")}</div>`+(pt=="stat"?profStat():pt=="ach"?profAch():profAct())},
+  return`<div class="row" style="align-items:center"><h2 style="flex:1">Профиль</h2><button class="x g" data-a="set" aria-label="Настройки">${ic("gear",22)}</button></div><div class="card g col pcard"><div class="prow"><button class="av" data-a="set" aria-label="Изменить профиль">${avHtml()}</button><div class="pn"><b dir="auto">${esc(nm)}</b><small>${S.hid?"@"+S.hid:"ID не задан"}</small></div><span class="lvb">★ Ур. ${L}</span></div><div class="plv"><small>СЛЕДУЮЩИЙ УРОВЕНЬ</small><small>${xp-a}/${b-a} ⭐</small></div><b style="font-size:20px">${b-xp} ⭐ осталось</b><i class="bar"><u style="width:${Math.round((xp-a)/(b-a)*100)}%"></u></i><div class="pst"><div><span>🔥</span><small>Серия</small><b>${strk()}</b></div><div><span>🎓</span><small>Уроки</small><b>${ls}</b></div><div><span>⭐</span><small>Всего</small><b>${xp}</b></div></div><button class="prk" data-a="board"><span class="si">🏆</span><div><b>Рейтинг</b><small>Топ игроков</small></div><span class="chv">›</span></button></div><div class="seg">${[["act","Активность"],["stat","Статистика"],["ach","Достижения"]].map(([k,n])=>`<button class="${pt==k?"on":""}" data-a="ppt" data-k="${k}">${n}</button>`).join("")}</div>`+(pt=="stat"?profStat():pt=="ach"?profAch():profAct())},
 homeR:()=>{const bs=BK();
-  return`<h2>Чтение</h2>${aiBn()}`+(bs.length?bs.map(b=>`<div class="card g col"><div class="row" style="align-items:center"><div style="flex:1"><b class="tt" dir="auto">${esc(b.title)}</b><small class="mu">${cap(b.lang)} · урок ${b.p.l+1} из ${b.ls.length}</small></div><button class="x" data-a="bdel" data-id="${b.id}" aria-label="Удалить">${V.cd==b.id?"Удалить?":ic("close",18)}</button></div><i class="bar"><u style="width:${Math.round((b.dn||[]).length/b.ls.length*100)}%"></u></i><button class="btn" data-a="bopen" data-id="${b.id}">${ic("play",20)} Продолжить чтение</button></div>`).join(""):`<div class="empty"><p>Пока нет книг. Загрузите свою книгу из файла или создайте короткий текст по теме.</p></div>`)+
-  `<label class="btn sec">${ic("plus",20)} Добавить книгу из файла<input type="file" data-f="bk" accept=".txt,.json,.docx" hidden></label><button class="btn sec" data-a="bprompt">Скопировать промпт для ИИ</button>${V.pr?`<textarea class="in" readonly rows="8" onclick="this.select()">${esc(BKP)}</textarea>`:""}<b>Быстрый текст по теме</b>${cfg()}<div class="tg">${TOP.map((n,i)=>tile(n,i,`data-a="topic" data-k="${n}"`)).join("")}</div>`},
+  return`<h2>Чтение</h2>`+(bs.length?bs.map(b=>`<div class="card g col"><div class="row" style="align-items:center"><div style="flex:1"><b class="tt" dir="auto">${esc(b.title)}</b><small class="mu">${cap(b.lang)} · урок ${b.p.l+1} из ${b.ls.length}</small></div><button class="x" data-a="bdel" data-id="${b.id}" aria-label="Удалить">${V.cd==b.id?"Удалить?":ic("close",18)}</button></div><i class="bar"><u style="width:${Math.round((b.dn||[]).length/b.ls.length*100)}%"></u></i><button class="btn" data-a="bopen" data-id="${b.id}">${ic("play",20)} Продолжить</button>${b.from?"":PUBCARDB(b)}</div>`).join(""):`<div class="empty"><p>Добавьте свою книгу или найдите книгу другого пользователя.</p></div>`)+
+  `<label class="btn ${bs.length?"sec":""}">${ic("plus",20)} Добавить книгу<input type="file" data-f="bk" accept=".txt,.json,.docx" hidden></label><button class="btn sec" data-a="findb">${ic("book",20)} Найти книги других пользователей</button>`+
+  `<div class="lgs" style="justify-content:center"><button class="chip" data-a="bprompt">Как подготовить книгу: промпт для ИИ</button></div>${V.pr?`<textarea class="in" readonly rows="8" onclick="this.select()">${esc(BKP)}</textarea>`:""}`},
+findb:()=>`<h2>Книги пользователей</h2><div class="row"><input class="in" data-f="fbq" value="${esc(FDB.q)}" placeholder="Название книги или автор…" autocapitalize="off"><button class="btn" style="width:auto;min-width:96px" data-a="fbgo">Найти</button></div>`+(FDB.err?`<p class="mu">${esc(FDB.err)}</p>`:"")+(FDB.busy?`<p class="mu">Загрузка…</p>`:FDB.rows&&!FDB.rows.length?`<div class="empty"><p>Ничего не найдено</p></div>`:(FDB.rows||[]).map(r=>`<div class="card g col"><b class="tt" dir="auto">${esc(r.title)}</b><small class="mu">${cap(r.lang||"")} · ${r.cnt} ур. · автор: ${esc(r.author||"—")}</small><button class="btn" data-a="fbadd" data-id="${r.id}">Добавить себе</button></div>`).join("")),
 homeB:()=>{const v=SBN,rl=S.rl||"английский",cs=S.courses.filter(c=>cl(c)==rl),rtl=rl=="арабский",dv=t=>rtl&&S.hk===false?strip(t):t;if(!v.items&&!v.busy&&!v.err)setTimeout(boxBuild);
   const sc=cs.find(x=>x.id==v.cid),lsn=sc?[...new Set(S.words.filter(w=>w.c==sc.id&&w.st>0).map(w=>w.l))].sort((a,b)=>a-b):[];
   const top=`<h2>Песочница</h2>${langs()}`+(cs.length?`<p class="mu" style="margin:0">Курс</p><div class="lgs">${[["all","Все курсы"],...cs.map(c=>[c.id,c.title])].map(([k,n])=>`<button class="chip ${k==v.cid?"on":""}" data-a="bcid" data-k="${k}">${esc(n)}</button>`).join("")}</div>`:"")+(sc?`<p class="mu" style="margin:0">Урок (только с выученными словами)</p><div class="lgs">${[["all","Все пройденные"],...lsn.map(i=>[i,"Урок "+(i+1)])].map(([k,n])=>`<button class="chip ${String(k)==String(v.lid)?"on":""}" data-a="blid" data-k="${k}">${n}</button>`).join("")}</div>`:"")+(v.note?`<p class="mu">${esc(v.note)}</p>`:"");
@@ -775,19 +832,24 @@ set:()=>{const tm=S.theme||"",hk=S.hk!==false,wd=S.wd=="back",g=goal(),A=SB&&SB.
   tg=on=>`<span class="tgl ${on?"on":""}"><i></i></span>`,chv='<span class="chv">›</span>',
   grp=(h,b)=>`<h3 class="sech">${h}</h3><div class="sgrp">${b}</div>`;
   let sh="";
-  if(V.sh=="av")sh=`<b>Аватар</b><div class="avg">${AVS.map(e=>`<button class="av ${S.av==e?"on":""}" data-a="pavs" data-k="${e}">${e}</button>`).join("")}</div>`;
+  if(V.sh=="av")sh=`<b>Аватар</b><label class="btn sec">📷 Выбрать фото из галереи<input type="file" data-f="avf" accept="image/*" hidden></label>${S.avi?`<button class="btn sec" data-a="pavx">Убрать фото</button>`:""}<div class="avg">${AVS.map(e=>`<button class="av ${!S.avi&&S.av==e?"on":""}" data-a="pavs" data-k="${e}">${e}</button>`).join("")}</div>`;
+  else if(V.sh=="crop")sh=`<b>Обрезка фото</b><p class="mu" style="margin:0">Перетащите фото и приблизьте его ползунком.</p><div id="cropv" class="cropv"><canvas id="cropc" width="280" height="280"></canvas><div class="cropm"></div></div><input type="range" data-f="cropz" min="1" max="3" step="0.01" value="${AVC.z}" style="width:100%"><div class="row"><button class="btn sec" data-a="pavc">Отмена</button><button class="btn" data-a="pavok">Сохранить</button></div>`;
+  else if(V.sh=="id")sh=`<b>Ваш ID</b><p class="mu" style="margin:0">Латиница, цифры и «_», от 3 до 20 символов, первой должна быть буква. Один ID — один пользователь: занять уже выбранный ID никто не сможет.</p><div class="idrow"><span>@</span><input data-f="idin" value="${esc(IDS.h)}" maxlength="20" placeholder="my_id" autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false"></div><p id="idst" class="mu" style="margin:0">${esc(IDM[IDS.st]||"")}</p>${SB&&SB.session?"":`<button class="btn sec" data-a="syn">Войти в аккаунт</button>`}${IDS.st=="table"?`<button class="btn sec" data-a="idsql">Скопировать SQL</button>`:""}<button class="btn" id="idsb" data-a="idsave" ${IDS.st=="free"?"":"disabled"}>Сохранить ID</button>${S.hid?`<button class="btn sec" data-a="idcopy">Скопировать @${S.hid}</button>`:""}`;
   else if(V.sh=="cty")sh=`<b>Страна</b><div class="lst">${CTY.map(([f,n])=>`<button class="card g ${S.cty==n?"on":""}" data-a="pctys" data-k="${n}"><span>${f}</span><b style="flex:1">${n}</b></button>`).join("")}</div>`;
+  else if(V.sh=="rs1")sh=`<b>⚠️ Сбросить все данные?</b><p style="margin:0">Вы потеряете весь прогресс: слова и курсы, книги и тексты, звёздочки, серию и статистику.</p><p class="mu" style="margin:0">Это касается данных на устройстве и в облаке, если вы вошли в аккаунт. Останутся только тема, аватар и ваш ID.</p><div class="row"><button class="btn sec" data-a="psx">Отмена</button><button class="btn" data-a="rs2">Продолжить</button></div>`;
+  else if(V.sh=="rs2")sh=`<b>Вы уверены?</b><p style="margin:0">Восстановить слова и курсы будет невозможно.</p><div class="row"><button class="btn sec" data-a="psx">Нет, оставить</button><button class="btn" data-a="rs3" style="background:#e5484d">Да, продолжить</button></div>`;
+  else if(V.sh=="rs3")sh=`<b>Последний шаг</b><p style="margin:0">Чтобы подтвердить, введите слово <b>УДАЛИТЬ</b>${S.hid?` или свой ID <b>@${esc(S.hid)}</b>`:""}.</p><input class="in" data-f="rsin" value="${esc(V.rt||"")}" placeholder="УДАЛИТЬ" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false"><div class="row"><button class="btn sec" data-a="psx">Отмена</button><button class="btn" id="rsb" data-a="rsgo" style="background:#e5484d" ${rsOk(V.rt)?"":"disabled"}>Удалить всё</button></div>`;
   else if(V.sh=="priv")sh=`<b>Конфиденциальность</b><p>Слова, курсы, книги и прогресс хранятся на вашем устройстве. Если вы вошли в аккаунт, копия сохраняется в облачном проекте синхронизации.</p><p>Ключ Gemini хранится только на устройстве. Тексты уходят в MyMemory, Tatoeba или Gemini только тогда, когда вы просите перевод, примеры или текст.</p>`;
   return`<h2>Настройки</h2>`+
-  grp("Профиль",row(`<span class="av sm">${S.av||"🙂"}</span>`,"Аватар","Показывается в профиле",chv,"pav")+`<div class="srow"><span class="si">👤</span><input class="in nm" data-f="nick" value="${esc(S.nick||"")}" placeholder="Ваше имя" maxlength="24"><button class="x" data-a="savenick" aria-label="Сохранить имя">${ic("check",20)}</button></div>`+row("🌐","Страна",cty?cty[0]+" "+cty[1]:"Не выбрана",chv,"pcty")+row("@","ID","@"+gid(),chv,"pid")+row("✉️","Почта",A?esc(A.email||"Аккаунт подключён"):"Не привязана: прогресс только на этом устройстве",chv,"syn"))+
+  grp("Профиль",row(`<span class="av sm">${avHtml()}</span>`,"Аватар","Показывается в профиле",chv,"pav")+`<div class="srow"><span class="si">👤</span><div><b>Имя</b><input class="nm" data-f="nick" value="${esc(S.nick||"")}" placeholder="Как вас называть" maxlength="24" autocomplete="off"></div><button class="x" data-a="savenick" aria-label="Сохранить имя">${ic("check",20)}</button></div>`+row("🌐","Страна",cty?cty[0]+" "+cty[1]:"Не выбрана",chv,"pcty")+row("@","ID",S.hid?"@"+S.hid:"Не задан: нажмите, чтобы придумать свой",chv,"pid")+row("✉️","Почта",A?esc(A.email||"Аккаунт подключён"):"Не привязана: прогресс только на этом устройстве",chv,"syn"))+
   `<h3 class="sech">Обучение</h3><p class="mu">Дневная цель: сколько слов выучить или повторить за день.</p>${GOALS.map(([n,t,e])=>`<button class="card g goal ${n==g?"on":""}" data-a="goal" data-k="${n}"><span class="em">${e}</span><b style="flex:1">${t}</b><span class="mu">${n} слов</span></button>`).join("")}<div class="card g col"><b>Режим «Письмо»</b><div class="row">${ch("setwd","fwd",!wd,"Слово → перевод")}${ch("setwd","back",wd,"Перевод → слово")}</div></div>`+
   grp("Арабский язык",`<div class="srow" style="flex-direction:column;align-items:stretch"><b>Огласовка (харакаты)</b><div class="row">${ch("sethk","1",hk,"Показывать")}${ch("sethk","0",!hk,"Скрывать")}</div><button class="btn sec" data-a="vocal">Добавить огласовку словам (ИИ)</button></div>`)+
   grp("Приложение",row("🔊","Звуки","Ответы в тренировке",tg(S.snd!==false),"tsnd")+(navigator.vibrate?row("📳","Вибрация","Лёгкая отдача при ответах",tg(S.vib!==false),"tvib"):"")+`<div class="srow" style="flex-direction:column;align-items:stretch"><b>Тема</b><div class="row">${ch("setth","",tm=="","Авто")}${ch("setth","light",tm=="light","Светлая")}${ch("setth","dark",tm=="dark","Тёмная")}</div></div><div class="srow" style="flex-direction:column;align-items:stretch"><b>Цветовая схема</b><div class="pals">${Object.entries(PALS).map(([k,p])=>`<button class="pal ${(S.pal||"indigo")==k?"on":""}" data-a="setpal" data-k="${k}"><span class="sw" style="background:linear-gradient(90deg,${p.sw[0]} 0 25%,${p.sw[1]} 25% 50%,${p.sw[2]} 50% 75%,${p.sw[3]} 75%)"></span><b>${p.n}</b></button>`).join("")}</div></div>`)+
   grp("ИИ и перевод",`<div class="srow" style="flex-direction:column;align-items:stretch"><b>Ключ Google Gemini</b><p class="mu" style="margin:0">Перевод слов по клику работает бесплатно через MyMemory. Для умных текстов и диалогов добавьте ключ с aistudio.google.com/apikey.</p><input class="in" type="password" data-f="aik" value="${esc(AIK())}" placeholder="Ключ Gemini (AIza…)" autocapitalize="off" autocomplete="off"><button class="btn" data-a="aitest">Проверить ключ</button><p class="mu" id="ais" style="margin:0">${esc(AIS||(aiOn()?"ИИ Gemini подключён + MyMemory активен":"Активен бесплатный перевод MyMemory + шаблоны"))}</p></div>`)+
-  grp("О приложении",row("⭐",`Звёздочки: ${S.xp}`,"Как они начисляются и что такое серия",chv,"xpinfo")+row("🔒","Конфиденциальность","Политика и обработка данных",chv,"ppriv")+row("ℹ️","Версия","Текущая сборка приложения",`<span class="mu">4.0</span>`))+
-  grp("Аккаунт",row("☁️","Синхронизация",sbOn()?"Подключена":"Не подключена",chv,"syn")+(A?row("🚪","Выйти","Данные останутся на этом устройстве","","aout"):(OWN?row("🔑","Войти через Google","Прогресс на всех устройствах","","agoogle"):""))+`<button class="srow" data-a="pdel"><span class="si" style="background:rgba(229,72,77,.15)">🗑️</span><div><b style="color:#e5484d">${V.dl?"Нажмите ещё раз для удаления":"Сбросить все данные"}</b><small>Удалит слова, курсы и прогресс на устройстве (и в облаке, если вы вошли)</small></div></button>`)+
-  (sh?`<div class="bsh-bg" data-a="psx"></div><div class="bsh">${sh}<button class="btn" data-a="psx">Готово</button></div>`:"")},
-xp:()=>`<h2>Звёздочки и прогресс</h2><div class="card g col"><b>Звёздочки (⭐) — как в мини-приложении Word</b><p>Звёздочки отражают ваш реальный словарный запас:</p><p class="mu">• <b>+1 ⭐ за слово, дошедшее до 5 этапа</b> (из 7): один раз для каждого слова.<br>• За повторения, чат и песочницу звёздочки не начисляются.<br>• Цель дня считает слова, которые вы выучили или успешно повторили за день.</p></div><div class="card g col"><b>Серия (огонёк 🔥)</b><p>Число дней подряд, в которые вы завершили хотя бы одну тренировку или повторение слов.</p></div><div class="card g col"><b>Этапы изучения слова (0–7)</b><p>Число в кружке показывает этап интервального повторения (1д → 3д → 1н → 1м → 3м → 6м → 1г). Уже с 1-го этапа слово считается выученным в уроке, а на 7-м этапе — освоенным навсегда.</p></div><div class="card g col"><b>Рейтинг игроков</b><p>В рейтинге отображается ваш никнейм, сколько слов вы выучили и сколько звёздочек заработали за неделю и за всё время.</p></div>`,
+  grp("О приложении",row("⭐",`Звёздочки: ${S.xp}`,"Как они начисляются и что такое серия",chv,"xpinfo")+row("🔒","Конфиденциальность","Политика и обработка данных",chv,"ppriv"))+
+  grp("Аккаунт",row("☁️","Синхронизация",sbOn()?"Подключена":"Не подключена",chv,"syn")+(A?row("🚪","Выйти","Данные останутся на этом устройстве","","aout"):(OWN?row("🔑","Войти через Google","Прогресс на всех устройствах","","agoogle"):""))+`<button class="srow" data-a="pdel"><span class="si" style="background:rgba(229,72,77,.15)">🗑️</span><div><b style="color:#e5484d">Сбросить все данные</b><small>Удалит слова, курсы и прогресс на устройстве (и в облаке, если вы вошли)</small></div></button>`)+
+  (sh?`<div class="bsh-bg" data-a="${V.sh=="crop"?"pavc":"psx"}"></div><div class="bsh">${sh}${V.sh=="crop"||V.sh=="id"||/^rs\d$/.test(V.sh)?"":`<button class="btn" data-a="psx">Готово</button>`}</div>`:"")},
+xp:()=>`<h2>Звёздочки и прогресс</h2><div class="card g col"><b>Звёздочки (⭐) — как в мини-приложении Word</b><p>Звёздочки отражают ваш реальный словарный запас:</p><p class="mu">• <b>+1 ⭐ за слово, дошедшее до 5 этапа</b> (из 7): один раз для каждого слова.<br>• <b>+1 ⭐ за день</b>, когда выполнена дневная цель.<br>• За повторения, чат и песочницу звёздочки не начисляются.<br>• Цель дня считает слова, которые вы выучили или успешно повторили за день.</p></div><div class="card g col"><b>Серия (огонёк 🔥)</b><p>Число дней подряд, в которые вы завершили хотя бы одну тренировку или повторение слов.</p></div><div class="card g col"><b>Этапы изучения слова (0–7)</b><p>Число в кружке показывает этап интервального повторения (1д → 3д → 1н → 1м → 3м → 6м → 1г). Уже с 1-го этапа слово считается выученным в уроке, а на 7-м этапе — освоенным навсегда.</p></div><div class="card g col"><b>Рейтинг игроков</b><p>В рейтинге отображается ваш никнейм, сколько слов вы выучили и сколько звёздочек заработали за неделю и за всё время.</p></div>`,
 done:()=>{const c=T.key&&T.key.c&&S.courses.find(x=>x.id==T.key.c);return`<div class="empty">${ic(V.pass?"star":"refresh",48)}<h2>${V.sc}%</h2><p>${V.pass?"Тренировка пройдена!":"Нужно не меньше 80%. Попробуйте ещё раз."}</p><p class="mu">+${T.xp} ⭐ (выучено новых: ${T.newW||0} · повторено: ${T.repW||0}) · серия ${S.streak} дн.</p><p class="mu">Освоение слов: ${pct(T.words)}% · всего выучено: ${learnedCnt("all")} сл.${c?` · курс ${prog(c)}%`:""}</p><p class="mu">Цель дня: ${Math.min(todayWd(),goal())} / ${goal()} слов${T.goalHit?" · выполнена 🎉":""}</p></div><button class="btn" data-a="${c?"course":"home"}" data-id="${c?c.id:""}">Продолжить</button>`}
 };
 let lastKey="";
@@ -842,6 +904,11 @@ function act0(a,d,el){
   case"fadd":return findAdd(d.id);
   case"pubon":return pubSet(S.courses.find(x=>x.id==V.id),true).then(R);
   case"puboff":return pubSet(S.courses.find(x=>x.id==V.id),false).then(R);
+  case"findb":V={v:"findb"};FDB.rows=null;FDB.err="";return findbGo();
+  case"fbgo":return findbGo();
+  case"fbadd":return findbAdd(d.id);
+  case"pubbon":return pubBookSet(BK().find(x=>x.id==d.id),true).then(R);
+  case"pubboff":return pubBookSet(BK().find(x=>x.id==d.id),false).then(R);
   case"mode":S.mode=d.k;save();break;
   case"yes":case"no":{const n=Date.now();if(n-(T.lt||0)<350)return;T.lt=n;return grade(a=="yes",1)}
   case"say":{const w=T.q[T.i];return w&&speak(w.v||w.t,wl(w))}
@@ -854,7 +921,6 @@ function act0(a,d,el){
   case"exn":{const w=T.q[T.i];if(!w||V.ld)return;w.xs=(w.xs||0)+1;w.px=(w.ex||[]).map(e=>e.s);w.ex=null;return ld(w)}
   case"wt":return wt(el,d.x);
   case"sayw":return speak(d.x,d.l);
-  case"topic":return genTopic(d.k);
   case"chat":V={v:"chat",sc:d.k,msgs:[],kw:kwList(),used:new Set,busy:0};R();turn();return;
   case"snd":return snd();
   case"set":V={v:"set"};break;
@@ -873,15 +939,24 @@ function act0(a,d,el){
   case"ppt":S.pt=d.k;V.pm=0;save();break;
   case"pmn":V.pm=Math.min(0,(V.pm||0)+(+d.k));break;
   case"pav":V.sh="av";break;
-  case"pavs":S.av=d.k;V.sh=null;save();break;
+  case"pavs":S.av=d.k;S.avi="";V.sh=null;save();break;
+  case"pavok":cropSave();V.sh=null;save();break;
+  case"pavc":AVC.img=null;V.sh="av";break;
+  case"pavx":S.avi="";V.sh=null;save();break;
+  case"idsave":return idSave();
+  case"idcopy":return cp("@"+S.hid,"ID скопирован");
+  case"idsql":return cp(IDSQL,"SQL скопирован: вставьте его в Supabase → SQL Editor");
   case"pcty":V.sh="cty";break;
   case"pctys":S.cty=d.k;V.sh=null;save();break;
   case"ppriv":V.sh="priv";break;
   case"psx":V.sh=null;break;
-  case"pid":{try{navigator.clipboard.writeText("@"+gid()).then(()=>toast("ID скопирован"),()=>toast("ID: @"+gid()))}catch(e){toast("ID: @"+gid())}return}
+  case"pid":V.sh="id";IDS={h:S.hid||"",st:""};idLoad();break;
   case"tsnd":S.snd=S.snd===false;save();break;
   case"tvib":S.vib=S.vib===false;save();break;
-  case"pdel":{if(!V.dl){V.dl=1;break}const keep={theme:S.theme,pal:S.pal,hk:S.hk,av:S.av,gid:S.gid};Object.keys(S).forEach(k=>delete S[k]);Object.assign(S,{courses:[],words:[],xp:0,streak:0,last:"",hist:{}},keep);Object.keys(LC).forEach(k=>delete LC[k]);save();V={v:"home"};S.tab="w";toast("Данные сброшены");break}
+  case"pdel":V.sh="rs1";V.rt="";break;
+  case"rs2":V.sh="rs2";break;
+  case"rs3":V.sh="rs3";V.rt="";break;
+  case"rsgo":{if(!rsOk(V.rt))return;const keep={theme:S.theme,pal:S.pal,hk:S.hk,av:S.av,avi:S.avi,hid:S.hid};Object.keys(S).forEach(k=>delete S[k]);Object.assign(S,{courses:[],words:[],xp:0,streak:0,last:"",hist:{}},keep);Object.keys(LC).forEach(k=>delete LC[k]);V={v:"home"};S.tab="w";save();toast("Данные сброшены");break}
   case"bopen":{const b=BK().find(x=>x.id==d.id);if(!b)return;V={v:"rd",bid:b.id,l:Math.min(b.p.l,b.ls.length-1)};scrollTo(0,0);break}
   case"bdel":if(V.cd==d.id){S.books=BK().filter(b=>b.id!=d.id);V.cd=0;save()}else V.cd=d.id;break;
   case"bprompt":{try{navigator.clipboard.writeText(BKP).then(()=>toast("Промпт скопирован"),()=>{V.pr=1;R()})}catch(e){V.pr=1}break}
@@ -956,7 +1031,7 @@ function act0(a,d,el){
 const FD={q:"",rows:null,busy:0,err:""};
 async function pbReq(path,o){o=o||{};const tk=SB&&SB.session?await authTok():null;
   const r=await fetch(base()+"/rest/v1/"+path,{method:o.m||"GET",body:o.b,headers:Object.assign({apikey:SB.key,Authorization:"Bearer "+(tk||SB.key),"Content-Type":"application/json"},o.h||{})});
-  if(!r.ok){let m="";try{m=(await r.json()).message||""}catch(e){}throw new Error(/wf_pub|relation|schema cache/.test(m)||r.status==404?"Таблица курсов ещё не создана в Supabase (нужно выполнить SQL)":(m||"Ошибка "+r.status))}
+  if(!r.ok){let m="";try{m=(await r.json()).message||""}catch(e){}throw new Error(/wf_pub|relation|schema cache/.test(m)||r.status==404?"Эта таблица ещё не создана в Supabase (нужно выполнить SQL)":(m||"Ошибка "+r.status))}
   return r.status==204?null:r.json()}
 async function findGo(){FD.busy=1;FD.err="";R();try{const q=FD.q.trim().replace(/[*,()%]/g,"");
   FD.rows=await pbReq("wf_pub?select=id,title,lang,cnt,author&is_public=eq.true&order=updated.desc&limit=30"+(q?"&or="+encodeURIComponent(`(title.ilike.*${q}*,author.ilike.*${q}*)`):""))}catch(e){FD.err=String(e.message||e)}FD.busy=0;R()}
@@ -971,14 +1046,27 @@ async function pubSet(c,on){if(!(SB&&SB.session))return toast("Войдите в
     else{row.owner=SB.session.id;c.pid=(await pbReq("wf_pub",{m:"POST",b:JSON.stringify(row),h:{Prefer:"return=representation"}}))[0].id}
     c.pub=on?1:0;save();toast(on?"Курс опубликован":"Курс стал приватным")}catch(e){toast(String(e.message||e))}}
 const PUBCARD=c=>`<div class="card g col"><b>Доступ к курсу</b><p class="mu">${c.pub?"Опубликован: другие пользователи могут найти и добавить его.":"Приватный: виден только вам."}</p>${SB&&SB.session?`<div class="row">${c.pub?`<button class="btn sec" data-a="pubon">Обновить</button><button class="btn sec" data-a="puboff">Сделать приватным</button>`:`<button class="btn" data-a="pubon">Опубликовать</button>`}</div>`:`<button class="btn sec" data-a="syn">Войти, чтобы публиковать</button>`}</div>`;
+const FDB={q:"",rows:null,busy:0,err:""};
+async function findbGo(){FDB.busy=1;FDB.err="";R();try{const q=FDB.q.trim().replace(/[*,()%]/g,"");
+  FDB.rows=await pbReq("wf_pub_books?select=id,title,lang,cnt,author&is_public=eq.true&order=updated.desc&limit=30"+(q?"&or="+encodeURIComponent(`(title.ilike.*${q}*,author.ilike.*${q}*)`):""))}catch(e){FDB.err=String(e.message||e)}FDB.busy=0;R()}
+async function findbAdd(id){if(BK().some(b=>b.from==id))return toast("Эта книга уже добавлена");FDB.busy=1;R();
+  try{const p=(await pbReq("wf_pub_books?select=title,lang,ls&id=eq."+id))[0];if(!p)throw new Error("Книга не найдена");
+    BK().push({id:uid(),title:p.title,lang:p.lang||"английский",ls:p.ls,p:{l:0},bm:[],dn:[],from:id});save();FDB.busy=0;V={v:"home"};S.tab="read";R()}
+  catch(e){FDB.busy=0;FDB.err=String(e.message||e);R()}}
+async function pubBookSet(b,on){if(!b)return;if(!(SB&&SB.session))return toast("Войдите в аккаунт, чтобы публиковать книги");
+  try{const row={title:b.title,lang:b.lang,ls:b.ls,cnt:b.ls.length,author:S.nick||(SB.session.email||"").split("@")[0]||"user",is_public:on,updated:Date.now()};
+    if(b.pid)await pbReq("wf_pub_books?id=eq."+b.pid,{m:"PATCH",b:JSON.stringify(row)});
+    else{row.owner=SB.session.id;b.pid=(await pbReq("wf_pub_books",{m:"POST",b:JSON.stringify(row),h:{Prefer:"return=representation"}}))[0].id}
+    b.pub=on?1:0;save();toast(on?"Книга опубликована":"Книга стала приватной")}catch(e){toast(String(e.message||e))}}
+const PUBCARDB=b=>`<div class="row" style="margin-top:4px;align-items:center"><small class="mu" style="flex:1">${b.pub?"Опубликована: другие пользователи могут найти её.":"Приватная книга"}</small>${SB&&SB.session?(b.pub?`<button class="chip" data-a="pubboff" data-id="${b.id}">Сделать приватной</button>`:`<button class="chip" data-a="pubbon" data-id="${b.id}">Опубликовать</button>`):`<button class="chip" data-a="syn">Войти, чтобы публиковать</button>`}</div>`;
 document.addEventListener("click",e=>{const t=e.target.closest("[data-a]");if(!e.target.closest("#pop,.wd"))$("#pop").className="";if(t)act(t.dataset.a,t.dataset,t)});
-document.addEventListener("input",e=>{const t=e.target,f=t.dataset.f;if(f=="nick"){S.nick=t.value;save();return}if(f=="fq"){FD.q=t.value;return}if(!f||f=="draft")return;if(f=="aik"){try{localStorage.setItem("wf_ai",t.value.trim())}catch(e){}GM="";return}if(f=="aem"||f=="apw"){AU[f=="aem"?"em":"pw"]=f=="aem"?t.value.trim():t.value;return}if(f=="sbu"||f=="sbk"||f=="sbc"){SB=SB||{};SB[{sbu:"url",sbk:"key",sbc:"code"}[f]]=t.value.trim();return}if(f=="rl"||f=="lv"){S[f]=t.value;save();return}
+document.addEventListener("input",e=>{const t=e.target,f=t.dataset.f;if(f=="nick"){S.nick=t.value;save();return}if(f=="fq"){FD.q=t.value;return}if(f=="fbq"){FDB.q=t.value;return}if(f=="idin"){idInput(t);return}if(f=="rsin"){V.rt=t.value;const b=document.getElementById("rsb");if(b)b.disabled=!rsOk(V.rt);return}if(f=="cropz"){const i=AVC.img;if(i){const o=Math.max(280/i.width,280/i.height),r=o*(+t.value)/(o*AVC.z);AVC.ox=140-(140-AVC.ox)*r;AVC.oy=140-(140-AVC.oy)*r;AVC.z=+t.value;cropDraw()}return}if(!f||f=="draft")return;if(f=="aik"){try{localStorage.setItem("wf_ai",t.value.trim())}catch(e){}GM="";return}if(f=="aem"||f=="apw"){AU[f=="aem"?"em":"pw"]=f=="aem"?t.value.trim():t.value;return}if(f=="sbu"||f=="sbk"||f=="sbc"){SB=SB||{};SB[{sbu:"url",sbk:"key",sbc:"code"}[f]]=t.value.trim();return}if(f=="rl"||f=="lv"){S[f]=t.value;save();return}
   if(f=="title")V.title=t.value;else if(f=="per"){V.per=+t.value;if(V.v=="editc"){V.el=0;R()}}else if(f=="lang")V.lang=t.value;else if(f=="el"){V.el=+t.value;R()}else if(f=="ea"||f=="eb")V.ws[+t.dataset.i][f=="ea"?"t":"tr"]=t.value;else V.pairs[+t.dataset.i][f=="a"?0:1]=t.value});
-document.addEventListener("change",e=>{if(e.target.type=="file"){const f=e.target.files[0];e.target.dataset.f=="bk"?loadBook(f):load(f);e.target.value=""}});
-document.addEventListener("keydown",e=>{if(e.key!="Enter")return;if(e.target.id=="ty")act("check",{});else if(e.target.id=="cin")snd();else if(e.target.dataset.f=="nick")act("savenick",{});else if(e.target.dataset.f=="fq")act("fgo",{})});
+document.addEventListener("change",e=>{if(e.target.type=="file"){const f=e.target.files[0];e.target.dataset.f=="bk"?loadBook(f):e.target.dataset.f=="avf"?avLoad(f):load(f);e.target.value=""}});
+document.addEventListener("keydown",e=>{if(e.key!="Enter")return;if(e.target.id=="ty")act("check",{});else if(e.target.id=="cin")snd();else if(e.target.dataset.f=="nick")act("savenick",{});else if(e.target.dataset.f=="fq")act("fgo",{});else if(e.target.dataset.f=="fbq")act("fbgo",{})});
 document.addEventListener("dragover",e=>e.preventDefault());
 document.addEventListener("drop",e=>{e.preventDefault();if(V.v=="import")load(e.dataTransfer.files[0])});
-authBoot();th();R();if(sbOn())pull().then(c=>{if(c){th();R()}});
+fixStars();authBoot();th();R();if(sbOn())pull().then(c=>{if(c){th();R()}});
 </script>
 </body>
 </html>
