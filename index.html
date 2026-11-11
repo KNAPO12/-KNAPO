@@ -16,7 +16,7 @@
 :root[data-theme="dark"]{--bg:#090D16;--tx:#FFFFFF;--mu:#94A3B8;--gl:rgba(19,27,46,.6);--gl2:rgba(19,27,46,.92);--st:rgba(30,41,59,.8);--sh:0 10px 30px rgba(0,0,0,.5);--hi:inset 0 1px 0 rgba(255,255,255,.07),inset 0 -1px 0 rgba(255,255,255,.02);--bd:rgba(148,163,184,.18);color-scheme:dark}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html{scroll-padding-top:env(safe-area-inset-top,0px);touch-action:manipulation;background:var(--bg)}
-body{margin:0;color:var(--tx);font:16px/1.4 -apple-system,system-ui,"SF Pro Text","Segoe UI",Roboto,sans-serif}
+body{margin:0;color:var(--tx);font:1rem/1.4 -apple-system,system-ui,"SF Pro Text","Segoe UI",Roboto,sans-serif}
 body::after{content:"";position:fixed;inset:0;z-index:-1;transform:translateZ(0);background:radial-gradient(55% 35% at 8% 6%,var(--g1,rgba(37,99,235,.5)),transparent 70%),radial-gradient(50% 35% at 96% 30%,var(--g2,rgba(59,130,246,.35)),transparent 70%),radial-gradient(60% 40% at 20% 100%,var(--g3,rgba(14,165,233,.3)),transparent 70%),var(--bg)}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:10}
 button,input,select{font:inherit;color:inherit}button{cursor:pointer;touch-action:manipulation;user-select:none;-webkit-user-select:none;transition:transform .12s,opacity .12s}button:active:not(:disabled){transform:scale(.96)}
@@ -157,6 +157,20 @@ header{gap:2px;padding:3px 6px}
   .sbx-split{grid-template-columns:1.2fr 0.8fr;gap:8px}
   .sbx-sents,.sbx-bank{max-height:54vh;padding:9px}
 }
+
+/* Sandbox layout tweaks */
+.sbx-split{display:grid;grid-template-columns:1.6fr 0.4fr;gap:10px;align-items:start}
+@media(max-width:400px){
+  .sbx-split{grid-template-columns:1.4fr 0.6fr;gap:8px}
+}
+/* Profile compact sizes */
+.pcard{padding:10px;}
+.pcard .pn b{font-size:18px;}
+.pcard .lvb{padding:4px 8px; font-size: 13px;}
+.pst b{font-size:18px;}
+.plv small{font-size: 11px;}
+.prk b{font-size: 16px;}
+.si{width:36px;height:36px;font-size:16px;border-radius:10px;}
 </style>
 </head>
 <body>
@@ -173,7 +187,7 @@ const P={user:'<circle cx="12" cy="8" r="4"/><path d="M4 20c1-4 4-6 8-6s7 2 8 6"
 const ic=(n,s=22)=>`<svg class="ic" width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${P[n]}</svg>`;
 const knapoLogo=(s=34)=>`<svg class="ic" width="${s}" height="${s}" viewBox="0 0 120 120" fill="none"><rect width="120" height="120" rx="28" fill="#141824" stroke="rgba(255,255,255,.18)" stroke-width="3"/><path d="M30 22h17v30l27-30h21L58 61 30 90z" fill="#fff"/><path d="M51 58l11-10 25 28c3 3 2 6-3 6H66c-3 0-5-1-7-3z" fill="#fff"/><path d="M67 52l23-5c2 0 3 1 3 3l-4 28c0 2-2 2-4 1L66 59c-2-2-2-6 1-7z" fill="#4373ff"/><path d="M95 52l4 1c1 0 2 1 2 3l-4 25c-1 3-3 5-6 5h-4l4-3c1-1 2-3 2-5z" fill="#2550de"/><path d="M103 58l2 1c1 0 2 1 1 3l-3 19c-1 4-4 6-8 7 3-2 5-4 5-8z" fill="#1b3cb5"/></svg>`;
 let S;try{S=JSON.parse(localStorage.getItem("wf1"))}catch(e){}
-S=S||{courses:[],words:[],xp:0,streak:0,last:"",theme:""};
+S=S||{courses:[],words:[],xp:0,streak:0,last:"",theme:"",studyDays:[1,2,3,4,5,6,0]};
 let svT=0;const flush=()=>{try{localStorage.setItem("wf1",JSON.stringify(S))}catch(e){}};
 let pt=0;const save=()=>{S.updated=Date.now();clearTimeout(svT);svT=setTimeout(flush,600);if(sbOn()){clearTimeout(pt);pt=setTimeout(push,15000)}};
 addEventListener("pagehide",flush);document.addEventListener("visibilitychange",()=>{if(document.hidden){flush();if(sbOn()&&pt){clearTimeout(pt);pt=0;push()}}else if(sbOn()&&["home","course","sync"].includes(V.v))pull().then(c=>{if(c)R()})});
@@ -191,6 +205,11 @@ function pal(){const r=document.documentElement,P=PALS[S.pal]||PALS.indigo,K=["-
   v["--ac"]=P.a;v["--ac2"]=P.b;P.g.forEach((c,i)=>v["--g"+(i+1)]=hx(c,(dk?[.5,.4,.35]:[.4,.32,.28])[i]));
   K.forEach(k=>v[k]?r.style.setProperty(k,v[k]):r.style.removeProperty(k))}
 try{matchMedia("(prefers-color-scheme:dark)").addEventListener("change",pal)}catch(e){}
+
+const applyScale=()=>{
+  const s = S.uiScale || 100;
+  document.documentElement.style.fontSize = (16 * (s/100)) + "px";
+};
 const th=()=>{S.theme?document.documentElement.dataset.theme=S.theme:delete document.documentElement.dataset.theme;pal()};
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const uid=()=>Math.random().toString(36).slice(2,9);
@@ -429,8 +448,18 @@ function commitRun(t){if(!t||!t.words)return;t.ap=t.ap||new Set();const now=Date
 function finish(){
   const now=Date.now(),sc=T.words.length?1-T.err.size/T.words.length:1,pass=sc>=.8;
   T.words.forEach(w=>{if(!T.err.has(w.id))T.done.add(w.id)});commitRun(T);
-  const td=new Date().toDateString(),y=new Date(now-DAY).toDateString();
-  if(S.last!=td){S.streak=S.last==y?S.streak+1:1;S.last=td}
+  const dObj=new Date(now), td=dObj.toDateString();
+  if(S.last!=td){
+    const sDays = S.studyDays || [1,2,3,4,5,6,0];
+    let streakKept = false, checkD = new Date(now-DAY);
+    for(let i=0; i<7; i++){
+      if(S.last==checkD.toDateString()){ streakKept = true; break; }
+      if(sDays.includes(checkD.getDay())) break;
+      checkD = new Date(checkD.getTime()-DAY);
+    }
+    S.streak=streakKept?S.streak+1:1;
+    S.last=td;
+  }
   if(T.key&&T.key.l!=null&&pass){const c=S.courses.find(x=>x.id==T.key.c);if(c&&!c.done.includes(T.key.l)){c.done.push(T.key.l);T.xp+=2;gain(2,cl(c))}}
   save();V={v:"done",sc:Math.round(sc*100),pass};
 }
@@ -907,9 +936,15 @@ set:()=>{const tm=S.theme||"",hk=S.hk!==false,wd=S.wd=="back",g=goal(),A=SB&&SB.
   else if(V.sh=="priv")sh=`<b>Конфиденциальность</b><p>Слова, курсы, книги и прогресс хранятся на вашем устройстве. Если вы вошли в аккаунт, копия сохраняется в облачном проекте синхронизации.</p><p>Ключ Gemini хранится только на устройстве. Тексты уходят в MyMemory, Tatoeba или Gemini только тогда, когда вы просите перевод, примеры или текст.</p>`;
   return`<h2>Настройки</h2>`+
   grp("Профиль",row(`<span class="av sm">${avHtml()}</span>`,"Аватар","Показывается в профиле",chv,"pav")+`<div class="srow"><span class="si">👤</span><div><b>Имя</b><input class="nm" data-f="nick" value="${esc(S.nick||"")}" placeholder="Как вас называть" maxlength="24" autocomplete="off"></div><button class="x" data-a="savenick" aria-label="Сохранить имя">${ic("check",20)}</button></div>`+row("🌐","Страна",cty?cty[0]+" "+cty[1]:"Не выбрана",chv,"pcty")+row("@","ID",S.hid?"@"+S.hid:"Не задан: нажмите, чтобы придумать свой",chv,"pid")+row("✉️","Почта",A?esc(A.email||"Аккаунт подключён"):"Не привязана: прогресс только на этом устройстве",chv,"syn"))+
-  `<h3 class="sech">Обучение</h3><p class="mu">Дневная цель: сколько слов выучить или повторить за день.</p>${GOALS.map(([n,t,e])=>`<button class="card g goal ${n==g?"on":""}" data-a="goal" data-k="${n}"><span class="em">${e}</span><b style="flex:1">${t}</b><span class="mu">${n} слов</span></button>`).join("")}<div class="card g col"><b>Режим «Письмо»</b><div class="row">${ch("setwd","fwd",!wd,"Слово → перевод")}${ch("setwd","back",wd,"Перевод → слово")}</div></div>`+
+  `<h3 class="sech">Обучение</h3><p class="mu">Дневная цель: сколько слов выучить или повторить за день.</p>${GOALS.map(([n,t,e])=>`<button class="card g goal ${n==g?"on":""}" data-a="goal" data-k="${n}"><span class="em">${e}</span><b style="flex:1">${t}</b><span class="mu">${n} слов</span></button>`).join("")}
+<div class="card g col"><b>Учебные дни</b><p class="mu" style="margin-top:0">В невыбранные дни серия не сгорает.</p><div class="sg" style="gap:4px">
+${[{k:1,n:"Пн"},{k:2,n:"Вт"},{k:3,n:"Ср"},{k:4,n:"Чт"},{k:5,n:"Пт"},{k:6,n:"Сб"},{k:0,n:"Вс"}].map(d=>`<button class="chip ${(!S.studyDays||S.studyDays.includes(d.k))?"on":""}" style="padding:0;min-height:36px;border-radius:12px" data-a="sday" data-k="${d.k}">${d.n}</button>`).join("")}
+</div></div>
+<div class="card g col"><b>Режим «Письмо»</b><div class="row">${ch("setwd","fwd",!wd,"Слово → перевод")}${ch("setwd","back",wd,"Перевод → слово")}</div></div>`+
   grp("Арабский язык",`<div class="srow" style="flex-direction:column;align-items:stretch"><b>Огласовка (харакаты)</b><div class="row">${ch("sethk","1",hk,"Показывать")}${ch("sethk","0",!hk,"Скрывать")}</div><button class="btn sec" data-a="vocal">Добавить огласовку словам (ИИ)</button></div>`)+
-  grp("Приложение",row("🔊","Звуки","Ответы в тренировке",tg(S.snd!==false),"tsnd")+(navigator.vibrate?row("📳","Вибрация","Лёгкая отдача при ответах",tg(S.vib!==false),"tvib"):"")+`<div class="srow" style="flex-direction:column;align-items:stretch"><b>Тема</b><div class="row">${ch("setth","",tm=="","Авто")}${ch("setth","light",tm=="light","Светлая")}${ch("setth","dark",tm=="dark","Тёмная")}</div></div><div class="srow" style="flex-direction:column;align-items:stretch"><b>Цветовая схема</b><div class="pals">${Object.entries(PALS).map(([k,p])=>`<button class="pal ${(S.pal||"indigo")==k?"on":""}" data-a="setpal" data-k="${k}"><span class="sw" style="background:linear-gradient(90deg,${p.sw[0]} 0 25%,${p.sw[1]} 25% 50%,${p.sw[2]} 50% 75%,${p.sw[3]} 75%)"></span><b>${p.n}</b></button>`).join("")}</div></div>`)+
+  grp("Приложение",
+`<div class="srow" style="flex-direction:column;align-items:stretch"><b>Масштаб интерфейса</b><div class="row"><button class="chip" data-a="uisc" data-k="-10">А-</button><div style="text-align:center;line-height:48px;flex:1">${S.uiScale||100}%</div><button class="chip" data-a="uisc" data-k="10">А+</button></div></div>`+
+row("🔊","Звуки","Ответы в тренировке",tg(S.snd!==false),"tsnd")+(navigator.vibrate?row("📳","Вибрация","Лёгкая отдача при ответах",tg(S.vib!==false),"tvib"):"")+`<div class="srow" style="flex-direction:column;align-items:stretch"><b>Тема</b><div class="row">${ch("setth","",tm=="","Авто")}${ch("setth","light",tm=="light","Светлая")}${ch("setth","dark",tm=="dark","Тёмная")}</div></div><div class="srow" style="flex-direction:column;align-items:stretch"><b>Цветовая схема</b><div class="pals">${Object.entries(PALS).map(([k,p])=>`<button class="pal ${(S.pal||"indigo")==k?"on":""}" data-a="setpal" data-k="${k}"><span class="sw" style="background:linear-gradient(90deg,${p.sw[0]} 0 25%,${p.sw[1]} 25% 50%,${p.sw[2]} 50% 75%,${p.sw[3]} 75%)"></span><b>${p.n}</b></button>`).join("")}</div></div>`)+
   grp("ИИ и перевод",`<div class="srow" style="flex-direction:column;align-items:stretch"><b>Ключ Google Gemini</b><p class="mu" style="margin:0">Перевод слов по клику работает бесплатно через MyMemory. Для умных текстов и диалогов добавьте ключ с aistudio.google.com/apikey.</p><input class="in" type="password" data-f="aik" value="${esc(AIK())}" placeholder="Ключ Gemini (AIza…)" autocapitalize="off" autocomplete="off"><button class="btn" data-a="aitest">Проверить ключ</button><p class="mu" id="ais" style="margin:0">${esc(AIS||(aiOn()?"ИИ Gemini подключён + MyMemory активен":"Активен бесплатный перевод MyMemory + шаблоны"))}</p></div>`)+
   grp("О приложении",row("⭐",`Звёздочки: ${S.xp}`,"Как они начисляются и что такое серия",chv,"xpinfo")+row("🔄","Пересчитать прогресс / Исправить подсчет звезд",`Сейчас выучено слов: ${learnedCnt("all")} · звёзд: ${S.xp}`,chv,"recalcxp")+row("🔒","Конфиденциальность","Политика и обработка данных",chv,"ppriv"))+
   grp("Аккаунт",row("☁️","Синхронизация",sbOn()?"Подключена":"Не подключена",chv,"syn")+(A?row("🚪","Выйти","Данные останутся на этом устройстве","","aout"):(OWN?row("🔑","Войти через Google","Прогресс на всех устройствах","","agoogle"):""))+`<button class="srow" data-a="pdel"><span class="si" style="background:rgba(229,72,77,.15)">🗑️</span><div><b style="color:#e5484d">Сбросить все данные</b><small>Удалит слова, курсы и прогресс на устройстве (и в облаке, если вы вошли)</small></div></button>`)+
@@ -1001,6 +1036,23 @@ function act0(a,d,el){
   }
   case"cl":{const c=S.courses.find(x=>x.id==V.id);c.lang=d.k;c.lcust=1;delete LC[c.id];save();break}
   case"goal":S.goal=+d.k;save();break;
+  case"sday":{
+    const k=+d.k;
+    S.studyDays = S.studyDays || [1,2,3,4,5,6,0];
+    if(S.studyDays.includes(k)) {
+      if(S.studyDays.length > 1) S.studyDays = S.studyDays.filter(x=>x!==k);
+      else return toast("Должен быть хотя бы один учебный день");
+    } else S.studyDays.push(k);
+    save();
+    break;
+  }
+  case"uisc":{
+    S.uiScale = Math.max(70, Math.min(150, (S.uiScale||100) + (+d.k)));
+    save();
+    applyScale();
+    break;
+  }
+
   case"ppt":S.pt=d.k;V.pm=0;save();break;
   case"pmn":V.pm=Math.min(0,(V.pm||0)+(+d.k));break;
   case"pav":V.sh="av";break;
@@ -1164,7 +1216,7 @@ document.addEventListener("change",e=>{if(e.target.type=="file"){const f=e.targe
 document.addEventListener("keydown",e=>{if(e.key!="Enter")return;if(e.target.id=="ty")act("check",{});else if(e.target.id=="cin")snd();else if(e.target.dataset.f=="nick")act("savenick",{});else if(e.target.dataset.f=="fq")act("fgo",{});else if(e.target.dataset.f=="fbq")act("fbgo",{})});
 document.addEventListener("dragover",e=>e.preventDefault());
 document.addEventListener("drop",e=>{e.preventDefault();if(V.v=="import")load(e.dataTransfer.files[0])});
-fixStars();authBoot();th();R();if(sbOn())pull().then(c=>{if(c){th();R()}});
+fixStars();authBoot();th();applyScale();R();if(sbOn())pull().then(c=>{if(c){th();R()}});
 </script>
 </body>
 </html>
